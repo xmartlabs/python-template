@@ -1,0 +1,12 @@
+.idea
+.ipynb_checkpoints
+.mypy_cache
+.vscode
+__pycache__
+.pytest_cache
+.coverage
+coverage.xml
+test.db
+log.txt
+env
+venv
