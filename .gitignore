@@ -8,5 +8,5 @@ __pycache__
 coverage.xml
 test.db
 log.txt
-env
+.env
 venv
