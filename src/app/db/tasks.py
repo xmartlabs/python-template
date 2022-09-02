@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from databases import Database
-from app.core.config import DATABASE_URL
+from app.api import settings
 import logging
 
 logger = logging.getLogger(__name__)
 
 
 async def connect_to_db(app: FastAPI) -> None:
-    database = Database(DATABASE_URL, min_size=2, max_size=10)  # these can be configured in config as well
+    database = Database(settings.db_async_connection_str, min_size=2, max_size=10)
 
     try:
         await database.connect()

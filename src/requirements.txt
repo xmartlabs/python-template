@@ -1,12 +1,14 @@
 # app
 fastapi==0.80.0
 uvicorn==0.18.3
+python-dotenv==0.20.0
 
 # db
 databases[postgresql]==0.6.1
 SQLAlchemy==1.4.40
 alembic==1.8.1
 psycopg2-binary==2.9.3
+asyncpg==0.26.0
 
 # dev
 pytest==7.1.2
