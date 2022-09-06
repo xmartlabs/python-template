@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from databases import Database
-from app.api import settings
+from app import settings
 import logging
 
 logger = logging.getLogger(__name__)

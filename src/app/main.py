@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 
-from app.api import settings
-from app.core import config, tasks
+from app import settings
+from app.core import tasks
 from app.api.routes import router as api_router
+from app.core.models import HealthCheck
 
 
 def get_application():
@@ -11,6 +12,14 @@ def get_application():
         version=settings.version,
         debug=settings.debug
     )
+
+    @application.get("/", response_model=HealthCheck, tags=["status"])
+    async def health_check():
+        return {
+            "name": settings.project_name,
+            "version": settings.version,
+            "description": settings.description
+        }
 
     application.include_router(api_router, prefix="/api")
 
