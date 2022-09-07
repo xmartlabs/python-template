@@ -1,5 +1,4 @@
 import asyncio
-import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -9,7 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from alembic import context
 from sqlmodel import SQLModel
 
-from app.heroes.models import Hero  # noqa: 'autogenerate' support
+from app import settings
+from app.user.models import User  # noqa: 'autogenerate' support
 
 config = context.config
 
@@ -29,7 +29,7 @@ target_metadata.naming_convention = {
 
 
 def run_migrations_offline() -> None:
-    url = os.getenv("DB_ASYNC_CONNECTION_STR")
+    url = settings.db_async_connection_str
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -54,7 +54,7 @@ def do_run_migrations(connection) -> None:
 
 async def run_migrations_online() -> None:
     config_section = config.get_section(config.config_ini_section)
-    url = os.getenv("DB_ASYNC_CONNECTION_STR")
+    url = settings.db_async_connection_str
     config_section["sqlalchemy.url"] = url
 
     connectable = AsyncEngine(

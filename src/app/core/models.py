@@ -19,8 +19,8 @@ class UUIDModel(SQLModel):
         index=True,
         nullable=False,
         sa_column_kwargs={
-            "server_default": text("gen_random_uuid()"),
-            "unique": True
+            'server_default': text('gen_random_uuid()'),
+            'unique': True
         }
     )
 
@@ -30,7 +30,7 @@ class TimestampModel(SQLModel):
         default_factory=datetime.utcnow,
         nullable=False,
         sa_column_kwargs={
-            "server_default": text("current_timestamp(0)")
+            'server_default': text('current_timestamp(0)')
         }
     )
 
@@ -38,7 +38,7 @@ class TimestampModel(SQLModel):
         default_factory=datetime.utcnow,
         nullable=False,
         sa_column_kwargs={
-            "server_default": text("current_timestamp(0)"),
-            "onupdate": text("current_timestamp(0)")
+            'server_default': text('current_timestamp(0)'),
+            'onupdate': text('current_timestamp(0)')
         }
     )

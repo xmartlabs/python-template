@@ -6,7 +6,7 @@ from sqlmodel import Field, SQLModel
 
 from app.core.models import TimestampModel, UUIDModel
 
-prefix = "hrs"
+tablename = "users"
 
 hrs_role_type = postgres.ENUM(
     "mage",
@@ -14,7 +14,7 @@ hrs_role_type = postgres.ENUM(
     "warrior",
     "priest",
     "tank",
-    name=f"{prefix}_role"
+    name=f"{tablename}_role"
 )
 
 
@@ -23,7 +23,7 @@ def _create_enums(metadata, conn, **kw):  # noqa: indirect usage
     hrs_role_type.create(conn, checkfirst=True)
 
 
-class HeroBase(SQLModel):
+class UserBase(SQLModel):
     nickname: str = Field(max_length=255, nullable=False)
     role: Optional[str] = Field(
         sa_column=Column(
@@ -34,22 +34,22 @@ class HeroBase(SQLModel):
     )
 
 
-class Hero(
+class User(
     TimestampModel,
-    HeroBase,
+    UserBase,
     UUIDModel,
     table=True
 ):
-    __tablename__ = f"{prefix}_heroes"
+    __tablename__ = f"{tablename}"
 
 
-class HeroRead(HeroBase, UUIDModel):
+class UserRead(UserBase, UUIDModel):
     ...
 
 
-class HeroCreate(HeroBase):
+class UserCreate(UserBase):
     ...
 
 
-class HeroPatch(HeroBase):
+class UserPatch(UserBase):
     nickname: Optional[str] = Field(max_length=255)
