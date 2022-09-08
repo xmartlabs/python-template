@@ -8,19 +8,18 @@ from app.core.models import TimestampModel, UUIDModel
 
 tablename = "users"
 
-hrs_role_type = postgres.ENUM(
-    "mage",
-    "assassin",
-    "warrior",
-    "priest",
-    "tank",
+users_role_type = postgres.ENUM(
+    "admin",
+    "premium",
+    "standard",
+    "guest",
     name=f"{tablename}_role"
 )
 
 
 @event.listens_for(SQLModel.metadata, "before_create")
 def _create_enums(metadata, conn, **kw):  # noqa: indirect usage
-    hrs_role_type.create(conn, checkfirst=True)
+    users_role_type.create(conn, checkfirst=True)
 
 
 class UserBase(SQLModel):
@@ -28,7 +27,7 @@ class UserBase(SQLModel):
     role: Optional[str] = Field(
         sa_column=Column(
             "role",
-            hrs_role_type,
+            users_role_type,
             nullable=True
         )
     )
@@ -44,11 +43,11 @@ class User(
 
 
 class UserRead(UserBase, UUIDModel):
-    ...
+    pass
 
 
 class UserCreate(UserBase):
-    ...
+    pass
 
 
 class UserPatch(UserBase):
