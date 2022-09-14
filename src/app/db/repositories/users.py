@@ -2,8 +2,7 @@ from typing import List
 
 from app.core.models import UUIDModel
 from app.db.repositories.base import BaseRepository
-from app.user.crud import UserCreate
-from app.user.models import UserBase, UserRead, UserInDB
+from app.user.models import UserCreate, UserRead, UserInDB
 
 GET_USERS_QUERY = """
     SELECT uuid, nickname, role, created_at, updated_at
