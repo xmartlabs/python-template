@@ -10,3 +10,4 @@ test.db
 log.txt
 src/.env
 venv
+.DS_Store
