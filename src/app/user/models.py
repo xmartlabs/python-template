@@ -42,13 +42,25 @@ class User(
     __tablename__ = f"{tablename}"
 
 
-class UserRead(UserBase, UUIDModel):
-    pass
+class UserRead(UUIDModel, UserBase):
+    uuid: UUIDModel
+    nickname: str
+    role: Optional[str]
 
 
 class UserCreate(UserBase):
-    pass
+    nickname: str
+    role: Optional[str]
 
 
 class UserPatch(UserBase):
     nickname: Optional[str] = Field(max_length=255)
+
+
+class UserInDB(UUIDModel, UserBase):
+    nickname: str
+    role: Optional[str]
+
+
+class UserPublic(UUIDModel, UserBase):
+    pass
