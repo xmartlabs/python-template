@@ -4,7 +4,6 @@ from typing import Any, Generic, Sequence, Type, TypeVar
 
 from fastapi import HTTPException
 from sqlalchemy import create_engine, func, select
-from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
@@ -72,14 +71,6 @@ class Objects(Generic[_Model]):
             raise HTTPException(
                 status_code=404, detail=f"{self.cls.__name__} not found"
             )
-        return obj
-
-    def get_or_exception(
-        self, *where_clause: Any, exception: Type[Exception] = NoResultFound
-    ) -> _Model:
-        obj = self.get(*where_clause)
-        if obj is None:
-            raise exception(f"{self.cls.__name__} not found")
         return obj
 
     def get_all(self, *where_clause: Any) -> Sequence[_Model]:

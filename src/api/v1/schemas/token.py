@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -6,7 +7,7 @@ from pydantic import BaseModel
 class Token(BaseModel):
     token_type: str = "bearer"
     access_token: str
-    expires_in: int
+    expires: datetime
 
 
 class TokenPayload(BaseModel):

@@ -7,8 +7,8 @@ class Settings(BaseSettings):
     # Auth
     access_token_expire_minutes: int
     jwt_signing_key: str
-    accept_cookie: bool = True
-    accept_header: bool = True
+    accept_cookie = True
+    accept_header = True
 
 
 settings = Settings()

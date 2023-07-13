@@ -17,3 +17,15 @@ class UserController:
             User.email == user_data.email, User.password == hashed_password
         )
         return user
+
+    @staticmethod
+    def login(user_data: UserCreate, session: Session) -> User:
+        login_exception = HTTPException(
+            status_code=401, detail="Invalid email or password"
+        )
+        user = User.objects(session).get(User.email == user_data.email)
+        if not user:
+            raise login_exception
+        if not PasswordManager.verify_password(user_data.password, user.password):
+            raise login_exception
+        return user

@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
+from typing import Tuple
 
-from fastapi import HTTPException, Response, Request
+from fastapi import HTTPException, Request, Response
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import ValidationError
@@ -35,18 +36,34 @@ class AuthManager:
     accept_cookie = settings.accept_cookie
     accept_header = settings.accept_header
 
-
-    def create_access_token(self, user: User, expires_delta: timedelta | None = None) -> Token:
+    @classmethod
+    def _create_access_token(
+        cls, user: User, expires_delta: timedelta | None = None
+    ) -> Tuple[str, datetime]:
         if expires_delta:
-            expire = datetime.utcnow() + expires_delta
+            expires = datetime.utcnow() + expires_delta
         else:
-            expire = datetime.utcnow() + timedelta(
+            expires = datetime.utcnow() + timedelta(
                 minutes=settings.access_token_expire_minutes
             )
-        claims = {"exp": expire, "user_id": str(user.id)}
-        token = jwt.encode(claims=claims, key=settings.jwt_signing_key, algorithm=self.algorithm)
-        return Token(access_token=token, expires_in=expire)
+        claims = {"exp": expires, "user_id": str(user.id)}
+        token = jwt.encode(
+            claims=claims, key=settings.jwt_signing_key, algorithm=cls.algorithm
+        )
+        return token, expires
 
+    @classmethod
+    def _set_cookie(cls, response: Response, token: str) -> None:
+        response.set_cookie(key=cls.cookie_name, value=token, httponly=True)
+
+    @classmethod
+    def process_login(cls, user: User, response: Response) -> Token | None:
+        token, expires = cls._create_access_token(user)
+        if cls.accept_cookie:
+            cls._set_cookie(response=response, token=token)
+        if cls.accept_header:
+            return Token(access_token=token, expires=expires)
+        return None
 
     def _get_user_from_token(self, token: str, session: Session) -> User:
         try:
@@ -56,26 +73,20 @@ class AuthManager:
             token_data = TokenPayload(**payload)
         except (JWTError, ValidationError):
             raise self.credentials_exception
-        user = User.objects(session).get_or_exception(
-            User.id == token_data.user_id, self.credentials_exception
-        )
+        user = User.objects(session).get(User.id == token_data.user_id)
+        if not user:
+            raise self.credentials_exception
         return user
-    
-    def _set_cookie(self, response: Response, token: str) -> None:
-        response.set_cookie(key=self.cookie_name, value=token, httponly=True)
 
-    
     def _get_token_from_cookie(self, request: Request) -> str | None:
         token = request.cookies.get(self.cookie_name)
         # To prevent returning ""
         return token if token else None
-    
 
     def _get_token_from_header(self, request: Request) -> str | None:
         token = request.headers.get(self.header_name)
         # To prevent returning ""
         return token if token else None
-    
 
     def _get_token(self, request: Request) -> str:
         token = None
@@ -86,9 +97,7 @@ class AuthManager:
         if not token:
             raise self.credentials_exception
         return token
-    
 
     def __call__(self, request: Request, session: Session) -> User:
         token = self._get_token(request)
         return self._get_user_from_token(token, session)
-

@@ -1,6 +1,6 @@
 from typing import Iterator
 
-from fastapi import Cookie, Depends, HTTPException
+from fastapi import Depends, Request
 
 from src.core.database import Session, SessionLocal
 from src.core.security import AuthManager
@@ -13,3 +13,8 @@ def db_session() -> Iterator[Session]:
         yield db
     finally:
         db.close()
+
+
+def get_user(request: Request, session: Session = Depends(db_session)) -> User:
+    manager = AuthManager()
+    return manager(request=request, session=session)

@@ -12,21 +12,26 @@ from src.core.security import AuthManager
 router = APIRouter()
 
 
-@router.post("", response_model=schemas.Token, status_code=201)
+@router.post("", status_code=201)
 def create(
-    response: Response, user_data: schemas.UserCreate, use_cookie: bool = False, session: Session = Depends(db_session)
-) -> schemas.Token:
+    response: Response,
+    user_data: schemas.UserCreate,
+    session: Session = Depends(db_session),
+) -> schemas.Token | None:
     user = UserController.create(user_data=user_data, session=session)
-    return AuthManager.create_access_token(user)
+    return AuthManager.process_login(user=user, response=response)
 
 
-@router.post("/login", response_model=schemas.Token)
+@router.post("/login")
 def login(
-    response: Response, user_data: schemas.UserCreate, use_cookie: bool = False,  session: Session = Depends(db_session)
-) -> schemas.Token:
-    pass
+    response: Response,
+    user_data: schemas.UserCreate,
+    session: Session = Depends(db_session),
+) -> schemas.Token | None:
+    user = UserController.login(user_data=user_data, session=session)
+    return AuthManager.process_login(user=user, response=response)
 
 
 @router.get("/me", response_model=schemas.User)
-def get_user_info(user: models.User = Depends(AuthManager)) -> Any:
+def get_user_info(user: models.User = Depends(get_user)) -> Any:
     return user
