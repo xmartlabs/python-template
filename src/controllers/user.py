@@ -1,0 +1,19 @@
+from fastapi import HTTPException
+
+from src.api.v1.schemas import UserCreate
+from src.core.database import Session
+from src.core.security import PasswordManager
+from src.models import User
+
+
+class UserController:
+    @staticmethod
+    def create(user_data: UserCreate, session: Session) -> User:
+        user = User.objects(session).get(User.email == user_data.email)
+        if user:
+            raise HTTPException(status_code=400, detail="Email address already in use")
+        hashed_password = PasswordManager.get_password_hash(user_data.password)
+        user = User.objects(session).create(
+            User.email == user_data.email, User.password == hashed_password
+        )
+        return user
