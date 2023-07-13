@@ -7,7 +7,7 @@ from pydantic import BaseModel
 class Token(BaseModel):
     token_type: str = "bearer"
     access_token: str
-    expires: datetime
+    expires_at: datetime
 
 
 class TokenPayload(BaseModel):

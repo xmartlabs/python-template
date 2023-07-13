@@ -62,7 +62,7 @@ class AuthManager:
         if cls.accept_cookie:
             cls._set_cookie(response=response, token=token)
         if cls.accept_header:
-            return Token(access_token=token, expires=expires)
+            return Token(access_token=token, expires_at=expires)
         return None
 
     def _get_user_from_token(self, token: str, session: Session) -> User:

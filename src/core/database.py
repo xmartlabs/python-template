@@ -101,7 +101,7 @@ class Objects(Generic[_Model]):
         self.session.refresh(obj)
         return obj
 
-    def find_or_create(self, *where_clause: Any) -> tuple[_Model, bool]:
+    def get_or_create(self, *where_clause: Any) -> tuple[_Model, bool]:
         row = self.get(*where_clause)
         if row is not None:
             return row, False
