@@ -38,7 +38,7 @@ class AuthManager:
     accept_header = settings.accept_header
 
     @classmethod
-    def _create_access_token(
+    def create_access_token(
         cls, user: User, expires_delta: timedelta | None = None
     ) -> Tuple[str, datetime]:
         if expires_delta:
@@ -59,14 +59,14 @@ class AuthManager:
 
     @classmethod
     def process_login(cls, user: User, response: Response) -> Token | None:
-        token, expires = cls._create_access_token(user)
+        token, expires = cls.create_access_token(user)
         if cls.accept_cookie:
             cls._set_cookie(response=response, token=token)
         if cls.accept_header:
             return Token(access_token=token, expires_at=expires)
         return None
 
-    def _get_user_from_token(self, token: str, session: Session) -> User:
+    def get_user_from_token(self, token: str, session: Session) -> User:
         try:
             payload = jwt.decode(
                 token=token, key=settings.jwt_signing_key, algorithms=self.algorithm
@@ -102,4 +102,4 @@ class AuthManager:
 
     def __call__(self, request: Request, session: Session) -> User:
         token = self._get_token(request)
-        return self._get_user_from_token(token, session)
+        return self.get_user_from_token(token, session)

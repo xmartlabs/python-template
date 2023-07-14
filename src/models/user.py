@@ -18,6 +18,9 @@ class User(SQLBase, DatedTableMixin):
     is_superuser: Mapped[bool] = mapped_column(default=False)
     items: Mapped[List["Item"]] = relationship("Item", back_populates="owner")
 
+    def __str__(self) -> str:
+        return self.email
+
     @classmethod
     def actives(cls, session: Session) -> Objects["User"]:
         return Objects(cls, session, User.is_active == True)  # noqa: E712

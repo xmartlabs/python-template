@@ -16,3 +16,6 @@ class Item(SQLBase, DatedTableMixin):
     is_public: Mapped[bool] = mapped_column()
     owner_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"))
     owner: Mapped["User"] = relationship("User", back_populates="items")
+
+    def __str__(self) -> str:
+        return "Item " + str(self.id)[:12] + "..."
