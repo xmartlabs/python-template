@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from typing import Tuple
 
 from fastapi import HTTPException, Request, Response
+from fastapi.security.utils import get_authorization_scheme_param
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import ValidationError
@@ -80,13 +81,14 @@ class AuthManager:
 
     def _get_token_from_cookie(self, request: Request) -> str | None:
         token = request.cookies.get(self.cookie_name)
-        # To prevent returning ""
-        return token if token else None
+        return token
 
     def _get_token_from_header(self, request: Request) -> str | None:
-        token = request.headers.get(self.header_name)
-        # To prevent returning ""
-        return token if token else None
+        authorization = request.headers.get(self.header_name)
+        scheme, token = get_authorization_scheme_param(authorization)
+        if scheme.lower() != "bearer":
+            return None
+        return token
 
     def _get_token(self, request: Request) -> str:
         token = None
