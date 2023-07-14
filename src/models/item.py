@@ -13,6 +13,6 @@ if typing.TYPE_CHECKING:
 class Item(SQLBase, DatedTableMixin):
     name: Mapped[str] = mapped_column()
     description: Mapped[str | None] = mapped_column()
-    is_public: Mapped[bool] = mapped_column(default=True)
+    is_public: Mapped[bool] = mapped_column()
     owner_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"))
     owner: Mapped["User"] = relationship("User", back_populates="items")

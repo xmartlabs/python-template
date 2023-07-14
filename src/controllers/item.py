@@ -1,17 +1,15 @@
 from uuid import UUID
 
-from src.api.v1.schemas import ItemCreate
+from src import models
+from src.api.v1 import schemas
 from src.core.database import Session
-from src.models import Item
 
 
 class ItemController:
     @staticmethod
-    def create(item_data: ItemCreate, owner_id: UUID, session: Session) -> Item:
-        item = Item.objects(session).create(
-            Item.name == item_data.name,
-            Item.description == item_data.description,
-            Item.is_public == item_data.is_public,
-            Item.owner_id == owner_id,
-        )
+    def create(
+        item_data: schemas.ItemCreate, owner_id: UUID, session: Session
+    ) -> models.Item:
+        item_data = schemas.Item(owner_id=owner_id, **item_data.dict())
+        item = models.Item.objects(session).create(item_data.dict())
         return item

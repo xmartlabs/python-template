@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from typing import Any, Generic, Sequence, Type, TypeVar
+from typing import Any, Dict, Generic, Sequence, Type, TypeVar
 
 from fastapi import HTTPException
 from sqlalchemy import create_engine, func, select
@@ -86,30 +86,12 @@ class Objects(Generic[_Model]):
 
         return self.session.execute(statement).scalar()  # type: ignore[return-value]
 
-    def _create_object(self, *data: Any) -> _Model:
-        object_kwargs = {
-            part.left.description: part.right.value
-            for part in data
-            if hasattr(part.right, "value")
-        }
-        return self.cls(**object_kwargs)
-
-    def create(self, *data: Any) -> _Model:
-        obj = self._create_object(*data)
+    def create(self, data: Dict[str, Any]) -> _Model:
+        obj = self.cls(**data)
         self.session.add(obj)
         self.session.commit()
         self.session.refresh(obj)
         return obj
-
-    def get_or_create(self, *where_clause: Any) -> tuple[_Model, bool]:
-        row = self.get(*where_clause)
-        if row is not None:
-            return row, False
-        obj = self._create_object(*where_clause)
-        self.session.add(obj)
-        self.session.commit()
-        self.session.refresh(obj)
-        return obj, True
 
 
 @declarative_mixin

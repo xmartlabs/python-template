@@ -41,7 +41,7 @@ def me(user: models.User = Depends(get_user)) -> Any:
     return user
 
 
-@router.get("{user_id}/items", response_model=Page[Item])
+@router.get("/{user_id}/items", response_model=Page[Item])
 def get_public_items(user_id: UUID, session: Session = Depends(db_session)) -> Any:
     user = models.User.objects(session).get_or_404(models.User.id == user_id)
     return paginate(session, user.get_public_items())
