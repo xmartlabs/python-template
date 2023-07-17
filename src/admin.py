@@ -14,11 +14,8 @@ class AdminAuth(AuthenticationBackend):
     async def login(self, request: Request) -> bool:
         form = await request.form()
         email, password = form["username"], form["password"]
-        try:
-            session = SessionLocal()
+        with SessionLocal() as session:
             user = User.objects(session).get(User.email == email)
-        finally:
-            session.close()
         if not user or not user.is_superuser:
             return False
         if not PasswordManager.verify_password(password, user.password):  # type: ignore[arg-type]
