@@ -18,4 +18,4 @@ class Item(SQLBase, DatedTableMixin):
     owner: Mapped["User"] = relationship("User", back_populates="items")
 
     def __str__(self) -> str:
-        return "Item " + str(self.id)[:12] + "..."
+        return f"Item {str(self.id)[:12]}..."
