@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 from uuid import UUID
 
@@ -15,6 +16,8 @@ from src.core.security import AuthManager
 
 router = APIRouter()
 
+logger = logging.getLogger(__name__)
+
 
 @router.post("", status_code=201)
 def signup(
@@ -24,6 +27,14 @@ def signup(
 ) -> Token | None:
     user = UserController.create(user_data=user_data, session=session)
     return AuthManager.process_login(user=user, response=response)
+
+
+@router.get("")
+def test_logging() -> None:
+    logger.debug("Test Debug")
+    logger.info("Test Info")
+    logger.warning("Test Warning")
+    logger.error("Test Error")
 
 
 @router.post("/login")
