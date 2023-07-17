@@ -6,13 +6,14 @@ from sqladmin import Admin
 from src.admin import AdminAuth, ItemAdmin, UserAdmin
 from src.core.database import engine
 from src.urls import router
+from src.core.config import settings
 
 app = FastAPI()
 
 app.include_router(router)
 
 origins = [
-    "http://localhost",
+    settings.server_url,
 ]
 
 app.add_middleware(

@@ -14,4 +14,8 @@ case "$1" in
     shell)
         docker-compose -f $DOCKER_COMPOSE_FILE_PATH run backend bash
         ;;
+    *)
+        echo "Usage: $0 {format|makemigrations|migrate|shell}"
+        exit 1
+        ;;
 esac

@@ -35,7 +35,7 @@ class AuthManager:
         headers={"WWW-Authenticate": "Bearer"},
     )
     accept_cookie = settings.accept_cookie
-    accept_header = settings.accept_header
+    accept_header = settings.accept_token
 
     @classmethod
     def create_access_token(
