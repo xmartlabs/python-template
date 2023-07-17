@@ -84,7 +84,7 @@ class Objects(Generic[_Model]):
         if where_clause:
             statement = statement.where(*where_clause)
 
-        return self.session.execute(statement).scalar()  # type: ignore[return-value]
+        return self.session.execute(statement).scalar_one()
 
     def create(self, data: Dict[str, Any]) -> _Model:
         obj = self.cls(**data)
@@ -96,7 +96,7 @@ class Objects(Generic[_Model]):
 
 @declarative_mixin
 class TableIdMixin:
-    id: Mapped[uuid.UUID] = mapped_column(  # type: ignore[misc]
+    id: Mapped[uuid.UUID] = mapped_column(
         primary_key=True, server_default=func.gen_random_uuid()
     )
 
