@@ -9,7 +9,7 @@ from src.models import Item, User
 
 
 class AdminAuth(AuthenticationBackend):
-    cookie_name = 'admin-cookie'
+    cookie_name = "admin-cookie"
 
     async def login(self, request: Request) -> bool:
         form = await request.form()
@@ -39,7 +39,7 @@ class AdminAuth(AuthenticationBackend):
         try:
             session = SessionLocal()
             user = manager.get_user_from_token(token=token, session=session)
-        except:
+        except Exception:
             return failed_auth_response
         finally:
             session.close()

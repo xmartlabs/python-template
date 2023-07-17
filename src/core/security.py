@@ -41,7 +41,9 @@ class AuthManager:
     def create_access_token(
         cls, user: User, expires_delta: timedelta | None = None
     ) -> Tuple[str, datetime]:
-        expires = datetime.utcnow() + (expires_delta or timedelta(minutes=settings.access_token_expire_minutes))
+        expires = datetime.utcnow() + (
+            expires_delta or timedelta(minutes=settings.access_token_expire_minutes)
+        )
         claims = {"exp": expires, "user_id": str(user.id)}
         token = jwt.encode(
             claims=claims, key=settings.jwt_signing_key, algorithm=cls.algorithm
