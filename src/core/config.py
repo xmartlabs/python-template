@@ -1,8 +1,18 @@
 from pydantic import BaseSettings, PostgresDsn
+from enum import Enum
+
+
+class LogLevel(str, Enum):
+    critical = "CRITICAL"
+    error = "ERROR"
+    warning = "WARNING"
+    info = "INFO"
+    debug = "DEBUG"
 
 
 class Settings(BaseSettings):
     database_url: PostgresDsn
+    log_level: LogLevel = LogLevel.debug
     server_url: str
 
     # Auth

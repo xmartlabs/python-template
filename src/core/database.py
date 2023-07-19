@@ -17,7 +17,7 @@ from sqlalchemy.sql import Select
 
 from src.core.config import settings
 from src.helpers.casing import snakecase
-from src.helpers.sql import utcnow
+from src.helpers.sql import utcnow, random_uuid
 
 engine = create_engine(settings.database_url)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -97,7 +97,7 @@ class Objects(Generic[_Model]):
 @declarative_mixin
 class TableIdMixin:
     id: Mapped[uuid.UUID] = mapped_column(
-        primary_key=True, server_default=func.gen_random_uuid()
+        primary_key=True, server_default=random_uuid()
     )
 
 
