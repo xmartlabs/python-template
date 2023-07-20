@@ -17,7 +17,7 @@ from sqlalchemy.sql import Select
 
 from src.core.config import settings
 from src.helpers.casing import snakecase
-from src.helpers.sql import utcnow, random_uuid
+from src.helpers.sql import random_uuid, utcnow
 
 engine = create_engine(settings.database_url)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

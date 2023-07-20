@@ -1,5 +1,6 @@
-from pydantic import BaseSettings, PostgresDsn
 from enum import Enum
+
+from pydantic import BaseSettings, PostgresDsn
 
 
 class LogLevel(str, Enum):
@@ -12,6 +13,7 @@ class LogLevel(str, Enum):
 
 class Settings(BaseSettings):
     database_url: PostgresDsn
+    test_database_url: PostgresDsn
     log_level: LogLevel = LogLevel.debug
     server_url: str
 
