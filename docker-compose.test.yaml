@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  backend:
+    environment:
+      - TEST_DATABASE_URL=postgresql://test:test@db:5432/test
+      - ACCESS_TOKEN_EXPIRE_MINUTES=0.02
+  db:
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test

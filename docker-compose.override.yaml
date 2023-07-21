@@ -1,0 +1,11 @@
+services:
+  db:
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: dev
+
+volumes:
+  postgres-data:

@@ -9,7 +9,13 @@ from src.core.config import settings
 from src.core.database import SQLBase
 from src.main import app
 
-engine = create_engine(settings.test_database_url)
+BASE_URL = "/api/v1"
+
+database_url = settings.test_database_url
+if not database_url:
+    raise RuntimeError("TEST_DATABASE_URL must be defined")
+
+engine = create_engine(database_url)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
