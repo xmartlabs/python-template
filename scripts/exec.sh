@@ -15,15 +15,18 @@ case "$1" in
     migrate)
         docker-compose run -T backend bash < migrate.sh
         ;;
-    shell)
+    bash)
         docker-compose run backend bash
+        ;;
+    shell)
+        docker-compose run --entrypoint python backend src/helpers/shell.py
         ;;
     test)
         docker-compose $DOCKER_COMPOSE_TEST_FILES run --rm -T backend bash < test.sh
         docker-compose $DOCKER_COMPOSE_TEST_FILES down
         ;;
     *)
-        echo "Usage: $0 {format|makemigrations|migrate|shell|test}"
+        echo "Usage: $0 {format|makemigrations|migrate|bash|shell|test}"
         exit 1
         ;;
 esac
