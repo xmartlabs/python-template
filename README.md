@@ -23,6 +23,8 @@ Linters, formatters, etc.
 - **mypy**: Static type checker
 - **black**: PEP 8 compliant opinionated formatter
 
+![Screenshot](.docs/images/format.png)
+
 There is a shortcut under the `/scripts` directory that runs all this tools for you (`./exec.sh format`).
 
 ## Tests
@@ -34,3 +36,5 @@ There is a shortcut under the `/scripts` directory that opens a python interacti
 - `session`: A SQLAlchemy `Session` object
 - `settings`: An instance of the app settings class
 - All the SQLAlchemy models classes
+
+![Screenshot](.docs/images/shell.png)
