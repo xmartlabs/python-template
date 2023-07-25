@@ -23,10 +23,9 @@ Linters, formatters, etc.
 - **mypy**: Static type checker
 - **black**: PEP 8 compliant opinionated formatter
 
-![Screenshot](.docs/images/format.png)
-
 There is a shortcut under the `/scripts` directory that runs all this tools for you (`./exec.sh format`).
 
+![Screenshot](.docs/images/format.png)
 ## Tests
 We use FastAPI's `TestClient` and `pytest` for testing. `./exec.sh test` shortcut can be used in order to run all tests.
 
