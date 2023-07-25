@@ -27,7 +27,7 @@ There is a shortcut under the `/scripts` directory that runs all this tools for 
 
 ![Screenshot](.docs/images/format.png)
 ## Tests
-We use FastAPI's `TestClient` and `pytest` for testing. `./exec.sh test` shortcut can be used in order to run all tests.
+We use FastAPI's `TestClient` and `pytest` for testing. `./exec.sh test` shortcut can be used to run all tests.
 
 ## Shell
 There is a shortcut under the `/scripts` directory that opens a python interactive shell inside the docker container. It's `./exec.sh shell` and has some useful pre-imported stuff:
