@@ -1,4 +1,4 @@
-# Recsys Backend
+# Python Template
 
 ## Components
 - Rest API built with FastAPI and SQLAlchemy
