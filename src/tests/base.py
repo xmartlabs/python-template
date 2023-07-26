@@ -12,8 +12,7 @@ from src.main import app
 BASE_URL = "/api/v1"
 
 database_url = settings.test_database_url
-if not database_url:
-    raise RuntimeError("TEST_DATABASE_URL must be defined")
+assert database_url is not None, "TEST_DATABASE_URL must be defined"
 
 engine = create_engine(database_url)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

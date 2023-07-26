@@ -19,7 +19,7 @@ class TestUser:
     TEST_EMAIL = "test@test.com"
     TEST_PASSWORD = "password"
     TEST_PAYLOAD = {"email": TEST_EMAIL, "password": TEST_PASSWORD}
-    BAD_TOKEN = f"Bearer {jwt.encode({'test': 'test'}, 'test')}"
+    BAD_TOKEN = f"Bearer {jwt.encode({'oops': 'oops'}, 'oops')}"
 
     def check_user_token(self, token: str) -> None:
         """
@@ -98,7 +98,7 @@ class TestUser:
     @reset_database
     def test_login_bad_password(self) -> None:
         client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
-        payload = {"email": self.TEST_EMAIL, "password": "bad-password"}
+        payload = {"email": self.TEST_EMAIL, "password": "oops"}
         response = client.post(self.LOGIN_URL, json=payload)
         self.check_login_fail(response=response)
 
@@ -123,7 +123,7 @@ class TestUser:
         assert response.status_code == 401
 
     @reset_database
-    def test_me_bad_header(self) -> None:
+    def test_me_bad_access_token(self) -> None:
         client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         client.cookies.clear()
         response = client.get(
