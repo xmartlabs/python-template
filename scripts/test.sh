@@ -1,1 +1,3 @@
-# TODO
+#!/bin/bash
+
+pytest src

@@ -23,4 +23,3 @@ class random_uuid(expression.FunctionElement):
 @compiles(random_uuid, "postgresql")
 def pg_uuid(element: Any, compiler: Any, **kw: Any) -> str:
     return "gen_random_uuid()"
-

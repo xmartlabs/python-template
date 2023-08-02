@@ -11,7 +11,7 @@ class UserController:
     def create(user_data: UserCreate, session: Session) -> User:
         user = User.objects(session).get(User.email == user_data.email)
         if user:
-            raise HTTPException(status_code=400, detail="Email address already in use")
+            raise HTTPException(status_code=409, detail="Email address already in use")
         hashed_password = PasswordManager.get_password_hash(user_data.password)
         user_data.password = hashed_password
         user = User.objects(session).create(user_data.dict())
