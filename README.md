@@ -39,6 +39,8 @@ There is a shortcut under the `/scripts` directory that opens a python interacti
 ![Screenshot](.docs/images/shell.png)
 
 ## Admin
-The template includes an admin interface via [SQLAdmin](https://github.com/aminalaee/sqladmin). It's a flexible admin that can be configured in many ways. One note: it's not recommended to include relationships in the `column_list`, because it's not very optimal in terms of DB requests in those cases.
+The template includes an admin interface via [SQLAdmin](https://github.com/aminalaee/sqladmin). It's a flexible admin that can be configured in many ways.
+
+*One note: You should be careful when adding relationships to the list or detail pages (specially large many-to-many / one-to-many relationships), because it's not very optimal in terms of DB querys in those cases (all the related objects would be loaded in memory).*
 
 ![Screenshot](.docs/images/admin.png)
