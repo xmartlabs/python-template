@@ -1,4 +1,8 @@
-# Python Template
+# Xmartlabs Python Template
+
+![python version](https://img.shields.io/badge/python-3.11-brightgreen)
+![fastAPI version](https://img.shields.io/badge/fastapi-0.95.2-brightgreen)
+
 
 ## Components
 - Rest API built with FastAPI and SQLAlchemy
@@ -26,6 +30,7 @@ Linters, formatters, etc.
 There is a shortcut under the `/scripts` directory that runs all this tools for you (`./exec.sh format`).
 
 ![Screenshot](.docs/images/format.png)
+
 ## Tests
 We use FastAPI's `TestClient` and `pytest` for testing. `./exec.sh test` shortcut can be used to run all tests.
 
@@ -44,3 +49,5 @@ The template includes an admin interface via [SQLAdmin](https://github.com/amina
 *One note: You should be careful when adding relationships to the list or detail pages (specially large many-to-many / one-to-many relationships), because it's not very optimal in terms of DB querys in those cases (all the related objects would be loaded in memory).*
 
 ![Screenshot](.docs/images/admin.png)
+
+
