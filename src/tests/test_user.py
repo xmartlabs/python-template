@@ -6,10 +6,9 @@ from jose import jwt
 
 from src.core.config import settings
 from src.core.security import AuthManager, PasswordManager
+from src.helpers.dates import parse_datetime
 from src.models import User
 from src.tests.base import BASE_URL, TestingSessionLocal, client, reset_database
-
-datetime_format = "%Y-%m-%dT%H:%M:%S.%f"
 
 
 class TestUser:
@@ -54,7 +53,7 @@ class TestUser:
         response = client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         assert response.status_code == 201
         data = response.json()
-        expires_at = datetime.strptime(data["expires_at"], datetime_format)
+        expires_at = parse_datetime(data["expires_at"])
         assert expires_at - expected_expire < timedelta(seconds=1)
         assert data["token_type"] == "Bearer"
         token = data["access_token"]
@@ -81,7 +80,7 @@ class TestUser:
         response = client.post(self.LOGIN_URL, json=self.TEST_PAYLOAD)
         assert response.status_code == 200
         data = response.json()
-        expires_at = datetime.strptime(data["expires_at"], datetime_format)
+        expires_at = parse_datetime(data["expires_at"])
         assert expires_at - expected_expire < timedelta(seconds=1)
         assert data["token_type"] == "Bearer"
         token = data["access_token"]
