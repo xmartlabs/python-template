@@ -11,7 +11,7 @@ from src.core.database import engine
 from src.logging import LogConfig
 from src.urls import router
 
-dictConfig(LogConfig().dict())
+dictConfig(LogConfig().model_dump())
 
 app = FastAPI()
 

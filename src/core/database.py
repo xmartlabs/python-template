@@ -19,7 +19,7 @@ from src.core.config import settings
 from src.helpers.casing import snakecase
 from src.helpers.sql import random_uuid, utcnow
 
-engine = create_engine(settings.database_url)
+engine = create_engine(str(settings.database_url))
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 

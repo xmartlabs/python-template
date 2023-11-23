@@ -17,7 +17,7 @@ fileConfig(config.config_file_name)
 
 target_metadata = SQLBase.metadata
 
-DATABASE_URL = settings.database_url
+DATABASE_URL = str(settings.database_url)
 
 
 def run_migrations_offline():
