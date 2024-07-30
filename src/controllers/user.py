@@ -14,7 +14,7 @@ class UserController:
             raise HTTPException(status_code=409, detail="Email address already in use")
         hashed_password = PasswordManager.get_password_hash(user_data.password)
         user_data.password = hashed_password
-        user = User.objects(session).create(user_data.dict())
+        user = User.objects(session).create(user_data.model_dump())
         return user
 
     @staticmethod

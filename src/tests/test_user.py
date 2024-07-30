@@ -3,10 +3,10 @@ from datetime import datetime, timedelta
 
 from httpx import Response
 from jose import jwt
-from pydantic.datetime_parse import parse_datetime
 
 from src.core.config import settings
 from src.core.security import AuthManager, PasswordManager
+from src.helpers.dates import parse_datetime
 from src.models import User
 from src.tests.base import BASE_URL, TestingSessionLocal, client, reset_database
 

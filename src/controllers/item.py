@@ -10,6 +10,6 @@ class ItemController:
     def create(
         item_data: schemas.ItemCreate, owner_id: UUID, session: Session
     ) -> models.Item:
-        item_data = schemas.Item(owner_id=owner_id, **item_data.dict())
-        item = models.Item.objects(session).create(item_data.dict())
+        item_data = schemas.Item(owner_id=owner_id, **item_data.model_dump())
+        item = models.Item.objects(session).create(item_data.model_dump())
         return item
