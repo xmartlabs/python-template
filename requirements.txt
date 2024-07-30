@@ -12,7 +12,7 @@ cwcwidth==0.1.8
 dnspython==2.3.0
 ecdsa==0.18.0
 email-validator==2.0.0.post2
-fastapi==0.103.1
+fastapi==0.109.1
 fastapi-pagination==0.12.9
 flake8==6.0.0
 greenlet==2.0.2
