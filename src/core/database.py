@@ -68,9 +68,7 @@ class Objects(Generic[_Model]):
     def get_or_404(self, *where_clause: Any) -> _Model:
         obj = self.get(*where_clause)
         if obj is None:
-            raise HTTPException(
-                status_code=404, detail=f"{self.cls.__name__} not found"
-            )
+            raise HTTPException(status_code=404, detail=f"{self.cls.__name__} not found")
         return obj
 
     def get_all(self, *where_clause: Any) -> Sequence[_Model]:
@@ -96,14 +94,10 @@ class Objects(Generic[_Model]):
 
 @declarative_mixin
 class TableIdMixin:
-    id: Mapped[uuid.UUID] = mapped_column(
-        primary_key=True, server_default=random_uuid()
-    )
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, server_default=random_uuid())
 
 
 @declarative_mixin
 class DatedTableMixin(TableIdMixin):
     created_at: Mapped[datetime] = mapped_column(server_default=utcnow())
-    updated_at: Mapped[datetime] = mapped_column(
-        server_default=utcnow(), onupdate=datetime.utcnow()
-    )
+    updated_at: Mapped[datetime] = mapped_column(server_default=utcnow(), onupdate=datetime.utcnow())

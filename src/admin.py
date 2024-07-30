@@ -29,9 +29,7 @@ class AdminAuth(AuthenticationBackend):
         return True
 
     async def authenticate(self, request: Request) -> RedirectResponse | None:
-        failed_auth_response = RedirectResponse(
-            request.url_for("admin:login"), status_code=302
-        )
+        failed_auth_response = RedirectResponse(request.url_for("admin:login"), status_code=302)
         manager = AuthManager()
         token = request.session.get(AdminAuth.cookie_name)
         if not token:
