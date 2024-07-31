@@ -4,9 +4,14 @@ RUN apt-get update && apt-get install -y postgresql
 
 WORKDIR /backend
 
-COPY requirements.txt .
+COPY poetry.lock pyproject.toml /backend/
 
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+# Install poetry dependency manager
+RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="/root/.local/bin:$PATH"
+RUN poetry --version
+
+RUN poetry install --no-interaction --no-ansi
 
 COPY . .
 
