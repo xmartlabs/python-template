@@ -2,11 +2,19 @@ FROM python:3.11
 
 RUN apt-get update && apt-get install -y postgresql
 
+# Install poetry dependency manager
+ENV POETRY_HOME="/usr/local" \
+    POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_VERSION=1.8.3
+
+RUN curl -sSL https://install.python-poetry.org | python3 -
+
+COPY poetry.lock pyproject.toml /backend/
+
 WORKDIR /backend
 
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+RUN poetry install --no-ansi
 
 COPY . .
 
