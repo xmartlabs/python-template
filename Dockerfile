@@ -1,6 +1,6 @@
-FROM python:3.11
+FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y postgresql
+RUN apt-get update && apt-get install -y curl libpq-dev gcc
 
 # Install poetry dependency manager
 ENV POETRY_HOME="/usr/local" \
@@ -14,7 +14,9 @@ COPY poetry.lock pyproject.toml /backend/
 
 WORKDIR /backend
 
-RUN poetry install --no-ansi
+RUN poetry install --no-ansi --no-root && \
+    # clean up installation caches
+    yes | poetry cache clear . --all
 
 COPY . .
 
