@@ -38,16 +38,10 @@ class AuthManager:
     accept_header = settings.accept_token
 
     @classmethod
-    def create_access_token(
-        cls, user: User, expires_delta: timedelta | None = None
-    ) -> Tuple[str, datetime]:
-        expires = datetime.utcnow() + (
-            expires_delta or timedelta(minutes=settings.access_token_expire_minutes)
-        )
+    def create_access_token(cls, user: User, expires_delta: timedelta | None = None) -> Tuple[str, datetime]:
+        expires = datetime.utcnow() + (expires_delta or timedelta(minutes=settings.access_token_expire_minutes))
         claims = {"exp": expires, "user_id": str(user.id)}
-        token = jwt.encode(
-            claims=claims, key=settings.jwt_signing_key, algorithm=cls.algorithm
-        )
+        token = jwt.encode(claims=claims, key=settings.jwt_signing_key, algorithm=cls.algorithm)
         return token, expires
 
     @classmethod
@@ -65,9 +59,7 @@ class AuthManager:
 
     def get_user_from_token(self, token: str, session: Session) -> User:
         try:
-            payload = jwt.decode(
-                token=token, key=settings.jwt_signing_key, algorithms=self.algorithm
-            )
+            payload = jwt.decode(token=token, key=settings.jwt_signing_key, algorithms=self.algorithm)
             token_data = TokenPayload(**payload)
         except (JWTError, ValidationError):
             raise self.credentials_exception

@@ -23,14 +23,10 @@ sqlalchemy = "^2.0.31"
 uvicorn = "^0.30.3"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.4.2"
-bpython = "^0.24"
-flake8 = "^7.1.0"
-isort = "^5.13.2"
 mypy = "^1.11.1"
 mypy-extensions = "^1.0.0"
-pycln = "^2.4.0"
 pytest = "^8.3.2"
+ruff = "^0.6.6"
 
 [tool.poetry.group.types.dependencies]
 types-passlib = "^1.7.7.20240327"
@@ -43,3 +39,29 @@ typing-extensions = "^4.12.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+[tool.ruff]
+line-length = 130
+force-exclude = true  # Ensure exclusions are respected by the pre-commit hook
+extend-exclude = [
+    "src/alembic/versions",
+    "__pycache__"
+]
+
+[tool.ruff.lint]
+extend-select = [  # Defaults: [ "E4", "E7", "E9", "F" ] (https://docs.astral.sh/ruff/rules/#error-e)
+    "E501",  # line-too-long
+    "I001",  # unsorted-imports
+    "I002",  # missing-required-import
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+exclude = "src/alembic/"
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "bpython"
+ignore_missing_imports = true
