@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "python-template"
+version = "0.1.0"
+description = "Xmartlabs' Python project template"
+authors = ["Xmartlabs <getintouch@xmartlabs.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+alembic = "^1.13.2"
+email-validator = "^2.2.0"
+fastapi = "^0.111.1"
+fastapi-pagination = "^0.12.26"
+itsdangerous = "^2.2.0"
+passlib = "^1.7.4"
+psycopg2 = "^2.9.9"
+pydantic = "^2.8.2"
+pydantic-settings = "^2.4.0"
+python-jose = "^3.3.0"
+sqladmin = "^0.18.0"
+sqlalchemy = "^2.0.31"
+uvicorn = "^0.30.3"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.4.2"
+bpython = "^0.24"
+flake8 = "^7.1.0"
+isort = "^5.13.2"
+mypy = "^1.11.1"
+mypy-extensions = "^1.0.0"
+pycln = "^2.4.0"
+pytest = "^8.3.2"
+
+[tool.poetry.group.types.dependencies]
+types-passlib = "^1.7.7.20240327"
+types-pyasn1 = "^0.6.0.20240402"
+types-python-jose = "^3.3.4.20240106"
+typing-inspect = "^0.9.0"
+typing-extensions = "^4.12.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
