@@ -1,7 +1,7 @@
 import inspect
 from typing import Dict, Type
 
-import bpython
+from ptpython.repl import embed
 
 from src import models
 from src.core.config import settings
@@ -20,7 +20,7 @@ def _start_shell() -> None:
     models = _get_models()
     with SessionLocal() as session:
         locals = {"session": session, "settings": settings, **models}
-        bpython.embed(locals_=locals)
+        embed(locals=locals, history_filename=".ptpython-history")
 
 
 if __name__ == "__main__":
