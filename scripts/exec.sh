@@ -1,53 +1,36 @@
 #!/bin/bash
 
-if [ -e "${PWD%/*}/docker-compose.yaml" ]; then
-    DOCKER_FILES_PATHS="${PWD%/*}"
-    SCRIPTS_PATH="."
-elif [ -e "${PWD%}/docker-compose.yaml" ]; then
-    DOCKER_FILES_PATHS="${PWD%}"
-    SCRIPTS_PATH="./scripts"
-else
-    echo "docker-compose related files not found"
-    exit 1
+# List of allowed commands
+ALLOWED_COMMANDS="format makemigrations migrate bash shell test docker_exec"
+
+# Container name (adjust if necessary)
+CONTAINER="python-template_devcontainer-devcontainer-1"
+
+
+function dev-exec() {
+    docker exec -it \
+        -e=PYTHONPATH=/workspace \
+        -e=USER=${USER} \
+        -w=/workspace \
+        $CONTAINER \
+        "${COMMAND[@]}"
+}
+
+# Check if an argument was passed
+if [ $# -eq 0 ]; then
+  echo "You must specify a command. Available commands are: $ALLOWED_COMMANDS"
+  exit 1
 fi
 
-if command -v docker-compose &> /dev/null; then
-    DOCKER_COMMAND="docker-compose"
-elif command -v docker compose  &> /dev/null; then
-    DOCKER_COMMAND="docker compose"
+# Check if the command is in the list of allowed commands
+if echo "$ALLOWED_COMMANDS" | grep -w -q "$1"; then
+  if [[ "$1" == "bash" ]]; then
+    COMMAND=("bash")
+  else
+    COMMAND=("bash" "-ic" "$1")
+  fi
+  dev-exec
 else
-    echo "Neither docker-compose nor docker compose are available."
-    exit 1
+  echo "Unrecognized command. Available commands are: $ALLOWED_COMMANDS"
+  exit 1
 fi
-
-
-DOCKER_COMPOSE_BASE_FILE_PATH="${DOCKER_FILES_PATHS}/docker-compose.yaml"
-TEST_DOCKER_COMPOSE_FILE_PATH="${DOCKER_FILES_PATHS}/docker-compose.test.yaml"
-DOCKER_COMPOSE_TEST_FILES="-f $DOCKER_COMPOSE_BASE_FILE_PATH -f $TEST_DOCKER_COMPOSE_FILE_PATH"
-
-
-case "$1" in
-    format)
-        $DOCKER_COMMAND run -T backend bash < "${SCRIPTS_PATH}/format.sh"
-        ;;
-    makemigrations)
-        $DOCKER_COMMAND run -T backend bash < "${SCRIPTS_PATH}/makemigrations.sh"
-        ;;
-    migrate)
-        $DOCKER_COMMAND run -T backend bash < "${SCRIPTS_PATH}/migrate.sh"
-        ;;
-    bash)
-        $DOCKER_COMMAND run backend bash
-        ;;
-    shell)
-        $DOCKER_COMMAND run --entrypoint python backend src/helpers/shell.py
-        ;;
-    test)
-        $DOCKER_COMMAND $DOCKER_COMPOSE_TEST_FILES run --rm -T backend bash < "${SCRIPTS_PATH}/test.sh"
-        $DOCKER_COMMAND $DOCKER_COMPOSE_TEST_FILES down
-        ;;
-    *)
-        echo "Usage: $0 {format|makemigrations|migrate|bash|shell|test}"
-        exit 1
-        ;;
-esac

@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from httpx import Response
 from jose import jwt
+from mock import patch
 
 from src.core.config import settings
 from src.core.security import AuthManager, PasswordManager
@@ -139,6 +140,7 @@ class TestUser:
         response = client.get(self.ME_URL)
         assert response.status_code == 401
 
+    @patch.object(settings, "access_token_expire_minutes", 0.02)
     @reset_database
     def test_expired_token(self) -> None:
         client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)

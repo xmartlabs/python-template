@@ -32,6 +32,7 @@ mypy = "^1.11.1"
 mypy-extensions = "^1.0.0"
 pycln = "^2.4.0"
 pytest = "^8.3.2"
+mock = "^5.1.0"
 
 [tool.poetry.group.types.dependencies]
 types-passlib = "^1.7.7.20240327"
