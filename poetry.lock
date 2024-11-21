@@ -1583,6 +1583,17 @@ shellingham = ">=1.3.0"
 typing-extensions = ">=3.7.4.3"
 
 [[package]]
+name = "types-mock"
+version = "5.1.0.20240425"
+description = "Typing stubs for mock"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "types-mock-5.1.0.20240425.tar.gz", hash = "sha256:5281a645d72e827d70043e3cc144fe33b1c003db084f789dc203aa90e812a5a4"},
+    {file = "types_mock-5.1.0.20240425-py3-none-any.whl", hash = "sha256:d586a01d39ad919d3ddcd73de6cde73ca7f3c69707219f722d1b8d7733641ad7"},
+]
+
+[[package]]
 name = "types-passlib"
 version = "1.7.7.20240819"
 description = "Typing stubs for passlib"
@@ -1924,4 +1935,4 @@ email = ["email-validator"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "f69a5cd8efa970d7de5d12194bb23bc985b5811c0a3dc1f05c25ede988af7e10"
+content-hash = "5f54cb6584569a2b72b0fa5e754ffe95eb0a3dabc2cf5aaeddbdcc37a211e12f"

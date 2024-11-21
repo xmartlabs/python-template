@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List of allowed commands
-ALLOWED_COMMANDS="format makemigrations migrate bash shell test docker_exec"
+ALLOWED_COMMANDS="format makemigrations migrate bash shell test"
 
 # Container name (adjust if necessary)
 CONTAINER="python-template_devcontainer-devcontainer-1"
