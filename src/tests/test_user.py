@@ -1,5 +1,5 @@
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from httpx import Response
 from jose import jwt
@@ -48,7 +48,7 @@ class TestUser:
 
     @reset_database
     def test_signup(self) -> None:
-        expected_expire = datetime.utcnow() + timedelta(
+        expected_expire = datetime.now(timezone.utc) + timedelta(
             minutes=settings.access_token_expire_minutes
         )
         response = client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
@@ -75,7 +75,7 @@ class TestUser:
     @reset_database
     def test_login(self) -> None:
         client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
-        expected_expire = datetime.utcnow() + timedelta(
+        expected_expire = datetime.now(timezone.utc) + timedelta(
             minutes=settings.access_token_expire_minutes
         )
         response = client.post(self.LOGIN_URL, json=self.TEST_PAYLOAD)

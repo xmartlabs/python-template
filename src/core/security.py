@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Tuple
 
 from fastapi import HTTPException, Request, Response
@@ -41,7 +41,7 @@ class AuthManager:
     def create_access_token(
         cls, user: User, expires_delta: timedelta | None = None
     ) -> Tuple[str, datetime]:
-        expires = datetime.utcnow() + (
+        expires = datetime.now(timezone.utc) + (
             expires_delta or timedelta(minutes=settings.access_token_expire_minutes)
         )
         claims = {"exp": expires, "user_id": str(user.id)}

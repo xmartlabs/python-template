@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, Generic, Sequence, Type, TypeVar
 
 from fastapi import HTTPException
@@ -105,5 +105,5 @@ class TableIdMixin:
 class DatedTableMixin(TableIdMixin):
     created_at: Mapped[datetime] = mapped_column(server_default=utcnow())
     updated_at: Mapped[datetime] = mapped_column(
-        server_default=utcnow(), onupdate=datetime.utcnow()
+        server_default=utcnow(), onupdate=datetime.now(timezone.utc)
     )
