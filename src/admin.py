@@ -45,7 +45,7 @@ class AdminAuth(AuthenticationBackend):
             session.close()
         if not user.is_superuser:
             return failed_auth_response
-        return False
+        return True
 
 
 class UserAdmin(ModelView, model=User):

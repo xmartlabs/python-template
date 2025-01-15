@@ -1,6 +1,6 @@
 # Xmartlabs Python Template
 
-![python version](https://img.shields.io/badge/python-3.11-brightgreen)
+![python version](https://img.shields.io/badge/python-3.13-brightgreen)
 ![fastAPI version](https://img.shields.io/badge/fastapi-0.95.2-brightgreen)
 
 
@@ -10,7 +10,7 @@
 
 ## Project setup
 
-The only things you need are [Docker](https://docs.docker.com/engine/install/), [Docker Compose](https://docs.docker.com/compose/install/), and a code editor with devcontainer support like [Visual Studio Code](https://code.visualstudio.com/download). Once you open the template with VS Code, it will recommend that you install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) if you don’t have it already. Then, a pop-up will appear to reopen the template in the devcontainer, or you can use `Ctrl / Cmd + shift + P` -> `Dev Containers: Open Folder in Container…`.
+The only things you need are [Docker](https://docs.docker.com/engine/install/), [Docker Compose](https://docs.docker.com/compose/install/), and a code editor with devcontainer support like [Visual Studio Code](https://code.visualstudio.com/download). Once you open the template with VS Code, it will recommend that you install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) if you don’t have it already. Then, a pop-up will appear to reopen the template in the devcontainer, or you can use `Ctrl / Cmd + shift + P` -> `Dev Containers: Open Folder in Container…`. Remember to add the `.env` file; you can use `.env.example` as a reference.
 
 And that's it, everything is ready to use. By using the VS Code terminal with `Ctrl / Cmd + J`, you'll be inside the container to run any command or start the server with `uvicorn src.main:app --reload --host 0.0.0.0 --port 8000`.
 
@@ -18,7 +18,9 @@ You can connect to the container once it's running using `scripts/exec.sh bash` 
 
 Once the containers and server are running, you can go to `http://localhost:8000/docs` to see the automatic interactive API documentation.
 
-In case you don't to use VS Code and dev containers, or you want to set up the environment in a different way. You must have:
+In case you don't to use VS Code and dev containers, or you want to set up the environment in a different way. You can use the `Dockerfile` in the root of the repository to create the image with everything needed to run the project. The `docker-compose.yaml` and `.env.example` files in the `.devcontainer` folder serve as references for recreating other services like the database. Also, you will need to run the `poetry install --no-ansi --no-root` command manually to install all the required dependencies.
+
+Alternatively, you must have:
 
 - `Python >3.13`
 - [Poetry](https://python-poetry.org/docs/#installation) (don't forget to install the dependencies from the lock file)
