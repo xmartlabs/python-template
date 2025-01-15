@@ -1,6 +1,6 @@
 # Xmartlabs Python Template
 
-![python version](https://img.shields.io/badge/python-3.11-brightgreen)
+![python version](https://img.shields.io/badge/python-3.13-brightgreen)
 ![fastAPI version](https://img.shields.io/badge/fastapi-0.95.2-brightgreen)
 
 
