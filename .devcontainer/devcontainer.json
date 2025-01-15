@@ -45,7 +45,7 @@
   "postStartCommand": "/workspace/.devcontainer/devcontainer-start.sh",
   "forwardPorts": [
     // Backend API:
-    //   localhost:8000
+    //   localhost:8000 for accessing on your host
     "devcontainer:8000",
     // Postgres:
     //   localhost:5432 for accessing postgres via local dbeaver/psql client
