@@ -11,6 +11,7 @@ services:
       - source: cache
         target: /root/.cache
         type: volume
+    env_file: .env
 
   postgres:
     image: postgres:16
