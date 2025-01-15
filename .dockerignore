@@ -1,0 +1,16 @@
+# repo and project folders
+.git
+.gitignore
+.gitmodules
+.idea
+.vscode
+
+# docker
+Dockerfile
+.dockerignore
+docker-compose.yaml
+
+# python related
+*.pyc
+*.pyo
+*.pyd
