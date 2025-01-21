@@ -14,7 +14,6 @@ class LogLevel(str, Enum):
 
 class Settings(BaseSettings):
     database_url: PostgresDsn
-    test_database_url: PostgresDsn | None = None
     log_level: LogLevel = LogLevel.debug
     server_url: str
 

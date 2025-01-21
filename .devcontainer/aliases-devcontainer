@@ -1,0 +1,5 @@
+alias format='scripts/format.sh'
+alias makemigrations='scripts/makemigrations.sh'
+alias migrate='scripts/migrate.sh'
+alias shell='python src/helpers/shell.py'
+alias test='pytest src'

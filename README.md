@@ -1,6 +1,6 @@
 # Xmartlabs Python Template
 
-![python version](https://img.shields.io/badge/python-3.11-brightgreen)
+![python version](https://img.shields.io/badge/python-3.13-brightgreen)
 ![fastAPI version](https://img.shields.io/badge/fastapi-0.95.2-brightgreen)
 
 
@@ -9,14 +9,31 @@
 - PostgreSQL database
 
 ## Project setup
-You only need to install [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/). 
-To start the containers, just run `docker-compose up` (or `docker-compose up -d` if you want to run the containers in background); or `docker-compose create` and `docker-compose start` if you don't want to see the logs. 
-Once the containers are running, you can go to `http://localhost:8000/docs` to see the automatic interactive API documentation.
+
+The only things you need are [Docker](https://docs.docker.com/engine/install/), [Docker Compose](https://docs.docker.com/compose/install/), and a code editor with devcontainer support like [Visual Studio Code](https://code.visualstudio.com/download). Once you open the template with VS Code, it will recommend that you install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) if you don’t have it already. Then, a pop-up will appear to reopen the template in the devcontainer, or you can use `Ctrl / Cmd + shift + P` -> `Dev Containers: Open Folder in Container…`. Remember to add the `.env` file; you can use `.env.example` as a reference.
+
+And that's it, everything is ready to use. By using the VS Code terminal with `Ctrl / Cmd + J`, you'll be inside the container to run any command or start the server with `uvicorn src.main:app --reload --host 0.0.0.0 --port 8000`.
+
+You can connect to the container once it's running using `scripts/exec.sh bash` and execute commands from another terminal outside of VS Code. Also, for all the following commands that can be run inside the dev container, you can run `scripts/exec.sh {command}` from outside the container.
+
+Once the containers and server are running, you can go to `http://localhost:8000/docs` to see the automatic interactive API documentation.
+
+In case you don't to use VS Code and dev containers, or you want to set up the environment in a different way. You can use the `Dockerfile` in the root of the repository to create the image with everything needed to run the project. The `docker-compose.yaml` and `.env.example` files in the `.devcontainer` folder serve as references for recreating other services like the database. Also, you will need to run the `poetry install --no-ansi --no-root` command manually to install all the required dependencies.
+
+Alternatively, you must have:
+
+- `Python >3.13`
+- [Poetry](https://python-poetry.org/docs/#installation) (don't forget to install the dependencies from the lock file)
+- [PostgreSQL](https://www.postgresql.org/) database, setting the corresponding environment variables for the database connection.
+
 
 ## Migrations
-We use Alembic as database migration tool. To run its commands you can open an interactive shell inside the backend container (you can use `./exec.sh bash` shortcut), or use the following shortcuts under the `/scripts` directory:
-- `./exec.sh migrate` -> runs all the migrations
-- `./exec.sh makemigrations` -> compares the actual status of the DB against the table metadata, and generates the migrations based on the comparison
+
+We use Alembic as database migration tool. You can run migration commands directly inside the dev container or use the provided shortcut in the `exec.sh` script.
+
+- `migrate` – Runs all migrations.
+- `makemigrations` – Compares the current database state with the table metadata and generates the necessary migration files.
+
 
 ## Code tools
 Linters, formatters, etc.
@@ -27,15 +44,20 @@ Linters, formatters, etc.
 - **mypy**: Static type checker
 - **black**: PEP 8 compliant opinionated formatter
 
-There is a shortcut under the `/scripts` directory that runs all this tools for you (`./exec.sh format`).
+There is a shortcut under the `/scripts` directory that runs all this tools for you (`./exec.sh format`) or just run `format` inside the dev container.
 
 ![Screenshot](.docs/images/format.png)
 
 ## Tests
-We use FastAPI's `TestClient` and `pytest` for testing. `./exec.sh test` shortcut can be used to run all tests.
+We use FastAPI's `TestClient` and `pytest` for testing. `./exec.sh test` shortcut can be used to run all tests or just `test` inside the dev container.
 
 ## Shell
-There is a shortcut under the `/scripts` directory that opens a python interactive shell inside the docker container. It's `./exec.sh shell` and has some useful pre-imported stuff:
+You can start an interactive Python shell inside the dev container in two ways:
+
+1. Simply run `shell` inside the container.
+2. Alternatively, use the `exec.sh shell` command.
+
+The shell provides some useful pre-imported stuff:
 
 - `session`: A SQLAlchemy `Session` object
 - `settings`: An instance of the app settings class
@@ -49,5 +71,3 @@ The template includes an admin interface via [SQLAdmin](https://github.com/amina
 *One note: You should be careful when adding relationships to the list or detail pages (specially large many-to-many / one-to-many relationships), because it's not very optimal in terms of DB querys in those cases (all the related objects would be loaded in memory).*
 
 ![Screenshot](.docs/images/admin.png)
-
-
