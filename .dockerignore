@@ -1,5 +1,8 @@
 # repo and project folders
+.devcontainer
+.docs
 .git
+.github
 .gitignore
 .gitmodules
 .idea
@@ -11,6 +14,8 @@ Dockerfile
 docker-compose.yaml
 
 # python related
+.mypy_cache
+.pytest_cache
 *.pyc
 *.pyo
 *.pyd

@@ -1,17 +1,19 @@
 services:
   devcontainer:
     command: sleep infinity
-    build: .
+    build:
+      context: ../
+      target: devcontainer
     ports:
       - '8000:8000'
     volumes:
       - source: ..
-        target: /workspace
+        target: /opt/app/${PROJECT:-python-template}
         type: bind
-      - source: cache
-        target: /root/.cache
-        type: volume
-    env_file: .env
+      - source: ./commandhistory
+        target: /home/appuser/.commandhistory
+        type: bind
+    env_file: ../.env
 
   postgres:
     image: postgres:16
@@ -28,4 +30,3 @@ services:
 
 volumes:
   postgres: {}
-  cache: {}

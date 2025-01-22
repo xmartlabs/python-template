@@ -9,9 +9,7 @@ CONTAINER="python-template_devcontainer-devcontainer-1"
 
 function dev-exec() {
     docker exec -it \
-        -e=PYTHONPATH=/workspace \
-        -e=USER=${USER} \
-        -w=/workspace \
+        -w=/opt/app/python-template \
         $CONTAINER \
         "${COMMAND[@]}"
 }
@@ -25,7 +23,7 @@ fi
 # Check if the command is in the list of allowed commands
 if echo "$ALLOWED_COMMANDS" | grep -w -q "$1"; then
   if [[ "$1" == "bash" ]]; then
-    COMMAND=("bash")
+    COMMAND=("zsh")
   else
     COMMAND=("bash" "-ic" "$1")
   fi

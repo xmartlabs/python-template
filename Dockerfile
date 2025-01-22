@@ -1,25 +1,100 @@
-FROM python:3.13-slim
+# ----
+# Base image install all the tools needed to build the project
+FROM python:3.13-slim-bookworm AS base
 
-RUN apt-get update && apt-get install -y curl libpq-dev gcc
+ARG PROJECT=python-template
+ARG USER=appuser
 
-# Install poetry dependency manager
-ENV POETRY_HOME="/usr/local" \
-    POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_CREATE=false \
-    POETRY_VERSION=1.8.3
+ENV RUNTIME_PACKAGES=libpq-dev
+# These packages will be deleted from the final image, after the application is packaged
+ENV BUILD_PACKAGES=gcc
 
-RUN curl -sSL https://install.python-poetry.org | python3 -
+RUN apt-get update \
+    && apt-get install -y ${BUILD_PACKAGES} ${RUNTIME_PACKAGES} \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY poetry.lock pyproject.toml /backend/
+RUN mkdir -p /opt/app/${PROJECT}
 
-WORKDIR /backend
+# Never run as root and prefer fixed IDs above 10000 to prevent conflicts with host users.
+RUN groupadd -g 10001 ${USER} \
+    && useradd -u 10000 -g ${USER} --create-home ${USER} \
+    && chown -R ${USER}:${USER} /opt/app
 
-RUN poetry install --no-ansi --no-root && \
-    # clean up installation caches
-    yes | poetry cache clear . --all
+USER ${USER}
 
-COPY . .
+ENV POETRY_HOME="/usr/local"
+ENV POETRY_NO_INTERACTION=1
+ENV POETRY_VIRTUALENVS_CREATE=false
+ENV POETRY_VERSION=2.0.1
 
-ENV PYTHONPATH=/backend
+# Poetry is installed in user's home directory, which is not in PATH by default.
+ENV PATH="$PATH:/home/${USER}/.local/bin"
+ENV PYTHONPATH=/opt/app/${PROJECT}
 
-CMD ["uvicorn", "src.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
+RUN pip install --upgrade pip \
+    && pip install --user poetry==${POETRY_VERSION}
+
+WORKDIR /opt/app/${PROJECT}
+COPY --chown=${USER}:${USER} . .
+
+RUN poetry install --no-root --without dev \
+    # clean up installation caches and artifacts
+    && yes | poetry cache clear . --all
+
+# root is needed to remove build dependencies
+USER root
+RUN apt-get purge -y ${BUILD_PACKAGES} \
+    && apt-get autoremove -y \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+USER ${USER}
+
+
+# ----
+# Devcontainer adds extra tools for development
+FROM base AS devcontainer
+
+USER root
+
+# Add any other tool usefull during development to the following list, this won't be included
+# in the deployment image.
+ENV DEV_TOOLS="sudo curl nano"
+RUN apt-get update \
+    && apt-get install -y ${DEV_TOOLS}
+
+# To run chsh without password
+RUN echo "auth       sufficient   pam_shells.so" > /etc/pam.d/chsh
+
+# Adding sudo in development stage is fine – it's like leaving your front door open during construction.
+# Move this to production, and we’ll personally revoke your coffee privileges
+RUN adduser ${USER} sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER ${USER}
+
+RUN poetry install --no-root --all-groups
+
+CMD ["sleep", "infinity"]
+
+# ----
+# Builder will package the app for deployment
+FROM base AS builder
+
+RUN poetry check \
+    && poetry build --format wheel
+
+
+# ----
+# Deployment stage to run in cloud environments. This must be the last stage, which is used to run the application by default
+FROM base AS deployment
+
+# TODO(remer): wheel version has to match what is set in pyproject.toml
+COPY --from=builder /opt/app/${PROJECT}/dist/python_template-0.1.0-py3-none-any.whl /opt/app/${PROJECT}/dist/python_template-0.1.0-py3-none-any.whl
+
+RUN poetry run pip install --no-deps dist/python_template-0.1.0-py3-none-any.whl
+
+EXPOSE 8000
+
+ENTRYPOINT  ["poetry", "run", "uvicorn", "src.main:app"]
+
+CMD ["--host", "0.0.0.0", "--port", "8000"]

@@ -21,6 +21,12 @@ var/
 .installed.cfg
 *.egg
 
+# Other Python related stuff
 .env
+.venv
 logs/*
 .ptpython-history
+.mypy_cache
+.pytest_cache
+
+.devcontainer/commandhistory

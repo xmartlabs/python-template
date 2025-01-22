@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pytest src
+poetry run pytest src

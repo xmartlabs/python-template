@@ -1,10 +1,16 @@
-[tool.poetry]
+[project]
 name = "python-template"
 version = "0.1.0"
 description = "Xmartlabs' Python project template"
-authors = ["Xmartlabs <getintouch@xmartlabs.com>"]
+authors = [{ name = "Xmartlabs", email = "getintouch@xmartlabs.com" }]
 readme = "README.md"
-package-mode = false
+requires-python = "^3.13"
+dependencies = []
+
+[tool.poetry]
+# TODO(remer): this can be removed when the source files are moved to project name folder within src
+# Otherwise, poetry build command fails as it expects project's name matches current folder's name
+packages = [{ include = "*", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.13"
@@ -13,6 +19,7 @@ bcrypt = "4.0.1"
 email-validator = "^2.2.0"
 fastapi = "^0.111.1"
 fastapi-pagination = "^0.12.26"
+httpx = "^0.28.1"
 itsdangerous = "^2.2.0"
 passlib = "^1.7.4"
 psycopg2 = "^2.9.9"
@@ -28,7 +35,7 @@ uvicorn = "^0.30.3"
 black = "^24.4.2"
 flake8 = "^7.1.0"
 isort = "^5.13.2"
-mypy = "^1.11.1"
+mypy = "^1.14.1"
 mypy-extensions = "^1.0.0"
 pycln = "^2.4.0"
 pytest = "^8.3.2"
@@ -42,7 +49,6 @@ types-mock = "^5.1.0.20240425"
 typing-inspect = "^0.9.0"
 typing-extensions = "^4.12.2"
 
-
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

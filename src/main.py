@@ -36,3 +36,9 @@ admin = Admin(app=app, engine=engine, authentication_backend=authentication_back
 
 admin.add_view(UserAdmin)
 admin.add_view(ItemAdmin)
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run("src.main:app", host="0.0.0.0", port=8000, reload=True)
