@@ -50,7 +50,7 @@
     ],
     "unwantedRecommendations": []
   },
-  "postCreateCommand": "cat /opt/app/python-template/.devcontainer/aliases-devcontainer >> ~/.zshrc",
+  "postCreateCommand": "/opt/app/python-template/.devcontainer/devcontainer-create.sh",
   "postStartCommand": "/opt/app/python-template/.devcontainer/devcontainer-start.sh",
   "forwardPorts": [
     // Backend API:
