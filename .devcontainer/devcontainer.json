@@ -6,10 +6,10 @@
     "devcontainer",
     "postgres"
   ],
-  "workspaceFolder": "/opt/app/python-template",
+  "workspaceFolder": "/opt/app/${localEnv:PROJECT_NAME:python-template}",
   "containerEnv": {
-    "PROJECT": "python-template",
-    "USER": "appuser"
+    "PROJECT": "${localEnv:PROJECT_NAME:python-template}",
+    "USER": "${localEnv:USER}"
   },
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
@@ -18,7 +18,7 @@
       "plugins": "git"
     }
   },
-  "remoteUser": "appuser",
+  "remoteUser": "${localEnv:USER}",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -50,8 +50,8 @@
     ],
     "unwantedRecommendations": []
   },
-  "postCreateCommand": "/opt/app/python-template/.devcontainer/devcontainer-create.sh",
-  "postStartCommand": "/opt/app/python-template/.devcontainer/devcontainer-start.sh",
+  "postCreateCommand": "/opt/app/${localEnv:PROJECT_NAME:python-template}/.devcontainer/devcontainer-create.sh",
+  "postStartCommand": "/opt/app/${localEnv:PROJECT_NAME:python-template}/.devcontainer/devcontainer-start.sh",
   "forwardPorts": [
     // Backend API:
     //   localhost:8000 for accessing on your host

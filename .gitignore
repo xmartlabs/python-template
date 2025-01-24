@@ -22,7 +22,6 @@ var/
 *.egg
 
 # Other Python related stuff
-.env
 .venv
 logs/*
 .ptpython-history
@@ -30,3 +29,6 @@ logs/*
 .pytest_cache
 
 .devcontainer/commandhistory
+.env
+# Just for those who use nushell
+.env.nu

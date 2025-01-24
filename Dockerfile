@@ -2,7 +2,7 @@
 # Base image install all the tools needed to build the project
 FROM python:3.13-slim-bookworm AS base
 
-ARG PROJECT=python-template
+ARG PROJECT_NAME=python-template
 ARG USER=appuser
 
 ENV RUNTIME_PACKAGES=libpq-dev
@@ -13,7 +13,7 @@ RUN apt-get update \
     && apt-get install -y ${BUILD_PACKAGES} ${RUNTIME_PACKAGES} \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /opt/app/${PROJECT}
+RUN mkdir -p /opt/app/${PROJECT_NAME}
 
 # Never run as root and prefer fixed IDs above 10000 to prevent conflicts with host users.
 RUN groupadd -g 10001 ${USER} \
@@ -22,19 +22,18 @@ RUN groupadd -g 10001 ${USER} \
 
 USER ${USER}
 
-ENV POETRY_HOME="/usr/local"
+ENV POETRY_HOME="/home/${USER}/.local/share/pypoetry"
 ENV POETRY_NO_INTERACTION=1
-ENV POETRY_VIRTUALENVS_CREATE=false
 ENV POETRY_VERSION=2.0.1
 
 # Poetry is installed in user's home directory, which is not in PATH by default.
 ENV PATH="$PATH:/home/${USER}/.local/bin"
-ENV PYTHONPATH=/opt/app/${PROJECT}
+ENV PYTHONPATH=/opt/app/${PROJECT_NAME}
 
 RUN pip install --upgrade pip \
     && pip install --user poetry==${POETRY_VERSION}
 
-WORKDIR /opt/app/${PROJECT}
+WORKDIR /opt/app/${PROJECT_NAME}
 COPY --chown=${USER}:${USER} . .
 
 RUN poetry install --no-root --without dev \
@@ -89,7 +88,7 @@ RUN poetry check \
 FROM base AS deployment
 
 # TODO(remer): wheel version has to match what is set in pyproject.toml
-COPY --from=builder /opt/app/${PROJECT}/dist/python_template-0.1.0-py3-none-any.whl /opt/app/${PROJECT}/dist/python_template-0.1.0-py3-none-any.whl
+COPY --from=builder /opt/app/${PROJECT_NAME}/dist/python_template-0.1.0-py3-none-any.whl /opt/app/${PROJECT_NAME}/dist/python_template-0.1.0-py3-none-any.whl
 
 RUN poetry run pip install --no-deps dist/python_template-0.1.0-py3-none-any.whl
 

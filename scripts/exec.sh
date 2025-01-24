@@ -9,8 +9,8 @@ CONTAINER="python-template_devcontainer-devcontainer-1"
 
 function dev-exec() {
     docker exec -it \
-        --user appuser \
-        -w=/opt/app/python-template \
+        --user $USER \
+        -w=/opt/app/$PROJECT_NAME \
         $CONTAINER \
         "${COMMAND[@]}"
 }

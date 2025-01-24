@@ -12,4 +12,4 @@ export HISTFILE="${HISTFILE_FOLDER}/.zsh_history"
 SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=${HISTFILE}"
 sed -i "1 i\\$SNIPPET" ~/.zshrc
 
-cat /opt/app/python-template/.devcontainer/aliases-devcontainer >> ~/.zshrc
+cat .devcontainer/aliases-devcontainer >> ~/.zshrc

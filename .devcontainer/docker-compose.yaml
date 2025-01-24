@@ -4,11 +4,14 @@ services:
     build:
       context: ../
       target: devcontainer
+      args:
+        PROJECT_NAME: ${PROJECT_NAME:-python-template}
+        USER: ${USER:-appuser}
     ports:
       - '8000:8000'
     volumes:
       - source: ..
-        target: /opt/app/${PROJECT:-python-template}
+        target: /opt/app/${PROJECT_NAME:-python-template}
         type: bind
       - source: ./commandhistory
         target: /home/appuser/.commandhistory
