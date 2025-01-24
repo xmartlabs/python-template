@@ -26,6 +26,18 @@ Alternatively, you must have:
 - [Poetry](https://python-poetry.org/docs/#installation) (don't forget to install the dependencies from the lock file)
 - [PostgreSQL](https://www.postgresql.org/) database, setting the corresponding environment variables for the database connection.
 
+### Customization
+
+The project's name (`python-template`) can be edited following next steps:
+
+1. Edit project's name in the [pyproject.toml](pyproject.toml) file
+2. Set `PROJECT_NAME` env variable to be exactly the same as project's name in pyproject.toml. Ensure VSCode has this
+variable loaded, otherwise the dev container might fail or not work as expected. You can open VScode with from cmd with:
+
+```bash
+PROJECT_NAME=your-awesome-project code <path/to/repo>
+```
+
 
 ## Migrations
 
