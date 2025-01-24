@@ -6,7 +6,7 @@ services:
       target: devcontainer
       args:
         PROJECT_NAME: ${PROJECT_NAME:-python-template}
-        USER: ${USER:-appuser}
+        USER: ${USER}
     ports:
       - '8000:8000'
     volumes:
@@ -14,7 +14,7 @@ services:
         target: /opt/app/${PROJECT_NAME:-python-template}
         type: bind
       - source: ./commandhistory
-        target: /home/appuser/.commandhistory
+        target: /home/${USER}/.commandhistory
         type: bind
     env_file: ../.env
 
