@@ -1,6 +1,6 @@
 [project]
 # Project's name must be the same as PROJECT_NAME environment variable used elsewhere.
-name = "python-remer"
+name = "python-template"
 version = "0.1.0"
 description = "Xmartlabs' Python project template"
 authors = [{ name = "Xmartlabs", email = "getintouch@xmartlabs.com" }]

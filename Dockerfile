@@ -40,14 +40,6 @@ RUN poetry install --no-root --without dev \
     # clean up installation caches and artifacts
     && yes | poetry cache clear . --all
 
-# root is needed to remove build dependencies
-USER root
-RUN apt-get purge -y ${BUILD_PACKAGES} \
-    && apt-get autoremove -y \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-USER ${USER}
-
 
 # ----
 # Devcontainer adds extra tools for development
@@ -71,6 +63,7 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER ${USER}
 
+RUN mkdir -p /home/${USER}/.cache
 RUN poetry install --no-root --all-groups
 
 CMD ["sleep", "infinity"]
@@ -82,10 +75,17 @@ FROM base AS builder
 RUN poetry check \
     && poetry build --format wheel
 
-
 # ----
 # Deployment stage to run in cloud environments. This must be the last stage, which is used to run the application by default
 FROM base AS deployment
+
+# root is needed to remove build dependencies
+USER root
+RUN apt-get purge -y ${BUILD_PACKAGES} \
+    && apt-get autoremove -y \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+USER ${USER}
 
 # TODO(remer): wheel version has to match what is set in pyproject.toml
 COPY --from=builder /opt/app/${PROJECT_NAME}/dist/python_template-0.1.0-py3-none-any.whl /opt/app/${PROJECT_NAME}/dist/python_template-0.1.0-py3-none-any.whl
@@ -94,6 +94,6 @@ RUN poetry run pip install --no-deps dist/python_template-0.1.0-py3-none-any.whl
 
 EXPOSE 8000
 
-ENTRYPOINT  ["poetry", "run", "uvicorn", "src.main:app"]
+ENTRYPOINT  ["poetry", "run", "python", "-m", "uvicorn", "src.main:app"]
 
 CMD ["--host", "0.0.0.0", "--port", "8000"]

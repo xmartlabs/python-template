@@ -29,6 +29,7 @@ logs/*
 .pytest_cache
 
 .devcontainer/commandhistory
+!.devcontainer/commandhistory/.gitkeep
 .env
 # Just for those who use nushell
 .env.nu

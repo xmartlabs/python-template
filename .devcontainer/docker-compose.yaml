@@ -1,6 +1,5 @@
 services:
   devcontainer:
-    command: sleep infinity
     build:
       context: ../
       target: devcontainer
@@ -16,6 +15,9 @@ services:
       - source: ./commandhistory
         target: /home/${USER}/.commandhistory
         type: bind
+      - source: cache
+        target: /home/${USER}/.cache
+        type: volume
     env_file: ../.env
 
   postgres:
@@ -33,3 +35,4 @@ services:
 
 volumes:
   postgres: {}
+  cache: {}
