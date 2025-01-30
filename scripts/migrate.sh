@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd src
-alembic upgrade head
+poetry run alembic upgrade head

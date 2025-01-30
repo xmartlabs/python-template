@@ -10,7 +10,7 @@
 
 ## Project setup
 
-The only things you need are [Docker](https://docs.docker.com/engine/install/), [Docker Compose](https://docs.docker.com/compose/install/), and a code editor with devcontainer support like [Visual Studio Code](https://code.visualstudio.com/download). Once you open the template with VS Code, it will recommend that you install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) if you don’t have it already. Then, a pop-up will appear to reopen the template in the devcontainer, or you can use `Ctrl / Cmd + shift + P` -> `Dev Containers: Open Folder in Container…`. Remember to add the `.env` file; you can use `.env.example` as a reference.
+The only things you need are [Docker](https://docs.docker.com/engine/install/), [Docker Compose](https://docs.docker.com/compose/install/), and a code editor with devcontainer support like [Visual Studio Code](https://code.visualstudio.com/download). Once you open the template with VS Code, it will recommend that you install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) if you don’t have it already. Then, a pop-up will appear to reopen the template in the devcontainer, or you can use `Ctrl / Cmd + shift + P` -> `Dev Containers: Open Folder in Container…`. Remember to add the `.env` file at the root folder; you can use `.env.example` as a reference.
 
 And that's it, everything is ready to use. By using the VS Code terminal with `Ctrl / Cmd + J`, you'll be inside the container to run any command or start the server with `uvicorn src.main:app --reload --host 0.0.0.0 --port 8000`.
 
@@ -25,6 +25,18 @@ Alternatively, you must have:
 - `Python >3.13`
 - [Poetry](https://python-poetry.org/docs/#installation) (don't forget to install the dependencies from the lock file)
 - [PostgreSQL](https://www.postgresql.org/) database, setting the corresponding environment variables for the database connection.
+
+### Customization
+
+The project's name (`python-template`) can be edited following next steps:
+
+1. Edit project's name in the [pyproject.toml](pyproject.toml) file
+2. Set `PROJECT_NAME` env variable to be exactly the same as project's name in pyproject.toml. Ensure VSCode has this
+variable loaded, otherwise the dev container might fail or not work as expected. You can open VScode with from cmd with:
+
+```bash
+PROJECT_NAME=your-awesome-project code <path/to/repo>
+```
 
 
 ## Migrations

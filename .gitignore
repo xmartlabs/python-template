@@ -21,6 +21,15 @@ var/
 .installed.cfg
 *.egg
 
-.env
+# Other Python related stuff
+.venv
 logs/*
 .ptpython-history
+.mypy_cache
+.pytest_cache
+
+.devcontainer/commandhistory
+!.devcontainer/commandhistory/.gitkeep
+.env
+# Just for those who use nushell
+.env.nu

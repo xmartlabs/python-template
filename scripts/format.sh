@@ -1,14 +1,16 @@
 #!/bin/bash
 
 printf "Runing pycln...\n"
-pycln src --exclude __init__.py --all
+poetry run python -m pycln src --exclude __init__.py --all
+
 printf "\nRunning isort...\n"
-isort src
+poetry run python -m run isort src
+
 printf "\nRunning flake8...\n"
-flake8
+poetry run python -m flake8 src
 
 printf "\nRunning mypy...\n"
-mypy src
+poetry run python -m mypy src
 
 printf "\nRunning black...\n"
-black src --exclude alembic
+poetry run python -m black src --exclude alembic
