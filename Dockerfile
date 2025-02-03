@@ -49,7 +49,7 @@ USER root
 
 # Add any other tool usefull during development to the following list, this won't be included
 # in the deployment image.
-ENV DEV_TOOLS="sudo curl nano"
+ENV DEV_TOOLS="sudo curl nano postgresql-client"
 RUN apt-get update \
     && apt-get install -y ${DEV_TOOLS}
 
