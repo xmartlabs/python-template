@@ -1,9 +1,11 @@
+import logging
 import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, Generic, Sequence, Type, TypeVar
 
 from fastapi import HTTPException
-from sqlalchemy import create_engine, func, select
+from sqlalchemy import ExceptionContext, create_engine, func, select
+from sqlalchemy.event import listens_for
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -26,11 +28,49 @@ from src.helpers.casing import snakecase
 from src.helpers.sql import random_uuid, utcnow
 
 # Sync engine and session
-engine = create_engine(str(settings.database_url))
+engine = create_engine(
+    url=str(settings.database_url),
+    pool_pre_ping=settings.database_pool_pre_ping,
+    pool_size=settings.database_pool_size,
+    pool_recycle=settings.database_pool_recycle,
+    max_overflow=settings.database_max_overflow,
+)
+
+
+@listens_for(engine, "handle_error")
+def _on_handle_error(context: ExceptionContext) -> None:
+    """
+    Handles errors that occur during SQL operations and logs them.
+    This function is triggered when an error event occurs for the PostgreSQL engine.
+    It logs the error and sets the `is_disconnect` attribute to True if the error
+    is related to a connection issue, prompting SQLAlchemy to retry the connection.
+
+    Args:
+        context (ExceptionContext): The context of the exception, containing details about the SQLAlchemy exception.
+
+    Returns:
+        None: this returns nothing.
+    """
+    logging.warning(
+        f"handle_error event triggered for PostgreSQL engine: {context.sqlalchemy_exception}"
+    )
+    if "Can't connect to PostgreSQL server on" in str(context.sqlalchemy_exception):
+        # Setting is_disconnect to True should tell SQLAlchemy treat this as a connection error and retry
+        context.is_disconnect = True  # type: ignore
+
+    return None
+
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Async engine and session
-async_engine: AsyncEngine = create_async_engine(str(settings.async_database_url))
+async_engine: AsyncEngine = create_async_engine(
+    url=str(settings.async_database_url),
+    pool_pre_ping=settings.database_pool_pre_ping,
+    pool_size=settings.database_pool_size,
+    pool_recycle=settings.database_pool_recycle,
+    max_overflow=settings.database_max_overflow,
+)
 
 
 def async_session_generator() -> async_sessionmaker[AsyncSession]:
