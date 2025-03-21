@@ -14,6 +14,7 @@ class LogLevel(str, Enum):
 
 class Settings(BaseSettings):
     database_url: PostgresDsn
+    async_database_url: PostgresDsn
     log_level: LogLevel = LogLevel.debug
     server_url: str
 
