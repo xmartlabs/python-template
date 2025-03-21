@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any
 
 from fastapi import APIRouter, Depends
 from fastapi_pagination import Page
@@ -38,7 +38,7 @@ async def get_items_async(
     return await paginate(async_session, user.get_items())
 
 
-@router.post("/async", response_model=List[Item], status_code=201)
+@router.post("/async", response_model=list[Item], status_code=201)
 async def create_item_async(
     item_data: BulkItemCreate,
     user: User = Depends(get_user),
