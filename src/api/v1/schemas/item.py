@@ -12,3 +12,7 @@ class ItemCreate(BaseModel):
 class Item(ItemCreate):
     owner_id: UUID
     model_config = ConfigDict(from_attributes=True)
+
+
+class BulkItemCreate(BaseModel):
+    items: list[ItemCreate]
