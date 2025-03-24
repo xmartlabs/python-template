@@ -14,6 +14,7 @@ class Item(SQLBase, DatedTableMixin):
     name: Mapped[str]
     description: Mapped[str | None]
     is_public: Mapped[bool]
+    total_quantity: Mapped[int] = mapped_column(nullable=True)
     owner_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"))
     owner: Mapped["User"] = relationship("User", back_populates="items")
 
