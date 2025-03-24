@@ -15,7 +15,7 @@ packages = [{ include = "*", from = "src" }]
 [tool.poetry.dependencies]
 python = "^3.13"
 
-alembic = "^1.13.2"
+alembic = "^1.15.1"
 asyncpg = "^0.30.0"
 bcrypt = "4.3.0"
 email-validator = "^2.2.0"
@@ -30,7 +30,7 @@ pydantic = "^2.10.6"
 pydantic-settings = "^2.8.1"
 python-jose = "^3.4.0"
 sqladmin = "^0.20.1"
-sqlalchemy = "^2.0.37"
+sqlalchemy = "^2.0.39"
 uvicorn = "^0.34.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -41,13 +41,13 @@ mypy = "^1.15.0"
 mypy-extensions = "^1.0.0"
 pycln = "^2.5.0"
 pytest = "^8.3.5"
-mock = "^5.1.0"
+mock = "^5.2.0"
 
 [tool.poetry.group.types.dependencies]
 types-passlib = "^1.7.7.20241221"
-types-pyasn1 = "^0.6.0.20240402"
+types-pyasn1 = "^0.6.0.20250208"
 types-python-jose = "^3.4.0.20250224"
-types-mock = "^5.1.0.20240425"
+types-mock = "^5.2.0.20250306"
 typing-inspect = "^0.9.0"
 typing-extensions = "^4.12.2"
 
