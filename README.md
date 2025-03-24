@@ -83,3 +83,5 @@ The template includes an admin interface via [SQLAdmin](https://github.com/amina
 *One note: You should be careful when adding relationships to the list or detail pages (specially large many-to-many / one-to-many relationships), because it's not very optimal in terms of DB querys in those cases (all the related objects would be loaded in memory).*
 
 ![Screenshot](.docs/images/admin.png)
+
+test channel notif
