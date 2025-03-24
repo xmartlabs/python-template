@@ -6,7 +6,7 @@ description = "Xmartlabs' Python project template"
 authors = [{ name = "Xmartlabs", email = "getintouch@xmartlabs.com" }]
 readme = "README.md"
 requires-python = "^3.13"
-dependencies = ["asyncpg (>=0.30.0,<0.31.0)"]
+dependencies = []
 
 [tool.poetry]
 # TODO(remer): this can be removed when the source files are moved to project name folder within src
@@ -31,6 +31,7 @@ python-jose = "^3.3.0"
 sqladmin = "^0.18.0"
 sqlalchemy = "^2.0.31"
 uvicorn = "^0.30.3"
+asyncpg = "^0.30.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.4.2"
