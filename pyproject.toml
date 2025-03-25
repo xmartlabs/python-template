@@ -6,7 +6,6 @@ description = "Xmartlabs' Python project template"
 authors = [{ name = "Xmartlabs", email = "getintouch@xmartlabs.com" }]
 readme = "README.md"
 requires-python = "^3.13"
-dependencies = []
 
 [tool.poetry]
 # TODO(remer): this can be removed when the source files are moved to project name folder within src
