@@ -1,0 +1,7 @@
+FROM python:3.13-slim-bookworm AS base
+
+WORKDIR /app
+
+COPY . /app
+
+RUN pip install celery==5.4.0 flower==2.0.1 pydantic==2.8.2 pydantic-settings==2.4.0 redis==5.2.1

@@ -4,7 +4,10 @@
   "service": "devcontainer",
   "runServices": [
     "devcontainer",
-    "postgres"
+    "postgres",
+    "redis",
+    "celery_worker",
+    "flower"
   ],
   "workspaceFolder": "/opt/app/${localEnv:PROJECT_NAME:python-template}",
   "containerEnv": {
@@ -58,7 +61,13 @@
     "devcontainer:8000",
     // Postgres:
     //   localhost:5432 for accessing postgres via local dbeaver/psql client
-    "postgres:5432"
+    "postgres:5432",
+    // Redis:
+    //   localhost:6379 for accessing redis via local redis-cli
+    "redis:6379",
+    // Flower:
+    //   localhost:5555 for accessing flower web ui
+    "flower:5555"
   ],
   "portsAttributes": {
     "5432": {
@@ -68,6 +77,14 @@
     "8000": {
       "label": "Backend API",
       "onAutoForward": "notify"
+    },
+    "6379": {
+      "label": "Redis",
+      "onAutoForward": "silent"
+    },
+    "5555": {
+      "label": "Flower",
+      "onAutoForward": "silent"
     }
   }
 }
