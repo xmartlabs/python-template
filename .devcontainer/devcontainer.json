@@ -42,7 +42,12 @@
         "editor.codeActionsOnSave": {
           "source.organizeImports": "explicit"
         },
-        "python.editor.defaultFormatter": "ms-python.black-formatter"
+        "python.editor.defaultFormatter": "ms-python.black-formatter",
+        "python.testing.unittestEnabled": false,
+        "python.testing.pytestArgs": [
+          "src/tests"
+        ],
+        "python.testing.pytestEnabled": true
       }
     },
     "black-formatter.args": [
