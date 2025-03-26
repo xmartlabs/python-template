@@ -13,8 +13,8 @@ requires-python = "^3.13"
 packages = [{ include = "*", from = "src" }]
 
 [tool.poetry.dependencies]
-python = "^3.13"
 alembic = "^1.13.2"
+asyncpg = "^0.30.0"
 bcrypt = "4.0.1"
 email-validator = "^2.2.0"
 fastapi = "^0.111.1"
@@ -24,13 +24,13 @@ itsdangerous = "^2.2.0"
 passlib = "^1.7.4"
 psycopg2 = "^2.9.9"
 ptpython = "^3.0.29"
+python = "^3.13"
 pydantic = "^2.8.2"
 pydantic-settings = "^2.4.0"
 python-jose = "^3.3.0"
 sqladmin = "^0.18.0"
 sqlalchemy = "^2.0.31"
 uvicorn = "^0.30.3"
-asyncpg = "^0.30.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.4.2"
