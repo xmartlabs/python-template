@@ -9,6 +9,9 @@ from src.task_queue.task import add
 router = APIRouter()
 
 
+# This is just an example of how to use Celery with FastAPI
+# in case you want to run some real-world tasks in the background
+# you have to implement the task logic in the src/task_queue/task.py file
 @router.post("/add", response_model=Task)
 def add_task(payload: TaskCreate = Body(...)) -> Any:
     task = add.delay(payload.delay, payload.x, payload.y)
