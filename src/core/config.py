@@ -13,8 +13,15 @@ class LogLevel(str, Enum):
 
 
 class Settings(BaseSettings):
+    # Database
     database_url: PostgresDsn
     async_database_url: PostgresDsn
+    database_pool_pre_ping: bool
+    database_pool_size: int
+    database_pool_recycle: int
+    database_max_overflow: int
+
+    # Logging
     log_level: LogLevel = LogLevel.debug
     server_url: str
 
