@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://json.schemastore.org/dependabot-2.0.json
+version: 2
+
+updates:
+  # Enable version updates for poetry
+  - package-ecosystem: "pip"
+    # Shared configuration among all package ecosystems
+    <<: &package-setup
+      commit-message:
+        include: "scope"
+        prefix: "chore"
+      directory: "/"
+      labels:
+        - dependencies
+      reviewers:
+        - xmartlabs/python
+      schedule:
+        interval: "weekly"
+    # dependabot doesn't support poetry v2. See: https://github.com/dependabot/dependabot-core/issues/11237
+    open-pull-requests-limit: 0
+
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    <<: *package-setup
