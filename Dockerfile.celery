@@ -1,7 +1,32 @@
+# Base image install all the tools needed to build the project
 FROM python:3.13-slim-bookworm AS base
 
-WORKDIR /app
+ARG PROJECT_NAME=python-template
+ARG USER=appuser
 
-COPY . /app
+RUN mkdir -p /opt/app/${PROJECT_NAME}
 
-RUN pip install celery==5.4.0 flower==2.0.1 pydantic==2.8.2 pydantic-settings==2.4.0 redis==5.2.1
+# Never run as root and prefer fixed IDs above 10000 to prevent conflicts with host users.
+RUN groupadd -g 10001 ${USER} \
+    && useradd -u 10000 -g ${USER} --create-home ${USER} \
+    && chown -R ${USER}:${USER} /opt/app
+
+USER ${USER}
+
+ENV POETRY_HOME="/home/${USER}/.local/share/pypoetry"
+ENV POETRY_NO_INTERACTION=1
+ENV POETRY_VERSION=2.0.1
+
+# Poetry is installed in user's home directory, which is not in PATH by default.
+ENV PATH="$PATH:/home/${USER}/.local/bin"
+ENV PYTHONPATH=/opt/app/${PROJECT_NAME}
+
+RUN pip install --upgrade pip \
+    && pip install --user poetry==${POETRY_VERSION}
+
+WORKDIR /opt/app/${PROJECT_NAME}
+COPY --chown=${USER}:${USER} . .
+
+RUN poetry install --no-root --only celery \
+    # clean up installation caches and artifacts
+    && yes | poetry cache clear . --all

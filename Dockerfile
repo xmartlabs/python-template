@@ -94,6 +94,6 @@ RUN poetry run pip install --no-deps dist/python_template-0.1.0-py3-none-any.whl
 
 EXPOSE 8000
 
-ENTRYPOINT  ["poetry", "run", "python", "-m", "uvicorn", "src.main:app"]
+ENTRYPOINT ["poetry", "run", "python", "-m", "uvicorn", "src.main:app"]
 
 CMD ["--host", "0.0.0.0", "--port", "8000"]

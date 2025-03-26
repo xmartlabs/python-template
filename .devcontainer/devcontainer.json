@@ -5,6 +5,7 @@
   "runServices": [
     "devcontainer",
     "postgres",
+    "rabbitmq",
     "redis",
     "celery_worker",
     "flower"
@@ -67,7 +68,10 @@
     "redis:6379",
     // Flower:
     //   localhost:5555 for accessing flower web ui
-    "flower:5555"
+    "flower:5555",
+    // RabbitMQ:
+    //   localhost:5672 for accessing rabbitmq via local rabbitmq-cli
+    "rabbitmq:5672"
   ],
   "portsAttributes": {
     "5432": {
@@ -84,6 +88,10 @@
     },
     "5555": {
       "label": "Flower",
+      "onAutoForward": "silent"
+    },
+    "5672": {
+      "label": "RabbitMQ",
       "onAutoForward": "silent"
     }
   }
