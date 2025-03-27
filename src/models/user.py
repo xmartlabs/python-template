@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import Select
 
-from src.core.database import DatedTableMixin, Objects, Session, SQLBase
+from src.core.database import AsyncSession, DatedTableMixin, Objects, SQLBase
 
 if typing.TYPE_CHECKING:
     from src.models import Item
@@ -22,7 +22,7 @@ class User(SQLBase, DatedTableMixin):
         return self.email
 
     @classmethod
-    def actives(cls, session: Session) -> Objects["User"]:
+    def actives(cls, session: AsyncSession) -> Objects["User"]:
         return Objects(cls, session, User.is_active == True)  # noqa: E712
 
     def get_items(self) -> Select:

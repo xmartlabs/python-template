@@ -14,7 +14,6 @@ class LogLevel(str, Enum):
 
 class Settings(BaseSettings):
     # Database
-    database_url: PostgresDsn
     async_database_url: PostgresDsn
     database_pool_pre_ping: bool
     database_pool_size: int

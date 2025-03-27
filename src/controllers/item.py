@@ -3,16 +3,17 @@ from uuid import UUID
 
 from src import models
 from src.api.v1 import schemas
-from src.core.database import AsyncSession, Session
+from src.core.database import AsyncSession
 
 
 class ItemController:
     @staticmethod
-    def create(
-        item_data: schemas.ItemCreate, owner_id: UUID, session: Session
+    async def create(
+        item_data: schemas.ItemCreate, owner_id: UUID, session: AsyncSession
     ) -> models.Item:
         item_data = schemas.Item(owner_id=owner_id, **item_data.model_dump())
-        item = models.Item.objects(session).create(item_data.model_dump())
+        item = await models.Item.objects(session).create(item_data.model_dump())
+        await session.refresh(item)
         return item
 
     @staticmethod
@@ -25,7 +26,7 @@ class ItemController:
             schemas.Item(owner_id=owner_id, **item_data.model_dump())
             for item_data in items_data
         ]
-        items = await models.Item.async_objects(async_session).bulk_create(
+        items = await models.Item.objects(async_session).bulk_create(
             [item_data.model_dump() for item_data in items_data]
         )
         for item in items:
