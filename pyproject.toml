@@ -33,6 +33,14 @@ sqladmin = "^0.20.1"
 sqlalchemy = "^2.0.39"
 uvicorn = "^0.34.0"
 
+
+[tool.poetry.group.celery.dependencies]
+celery = "^5.4.0"
+flower = "^2.0.1"
+pydantic = "^2.8.2"
+pydantic-settings = "^2.4.0"
+redis = "^5.2.1"
+
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
 flake8 = "^7.1.2"
@@ -44,6 +52,7 @@ pytest = "^8.3.5"
 mock = "^5.2.0"
 
 [tool.poetry.group.types.dependencies]
+celery-types = "^0.23.0"
 types-passlib = "^1.7.7.20241221"
 types-pyasn1 = "^0.6.0.20250208"
 types-python-jose = "^3.4.0.20250224"

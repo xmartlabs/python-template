@@ -31,5 +31,9 @@ class Settings(BaseSettings):
     accept_cookie: bool = True
     accept_token: bool = True
 
+    # Celery
+    celery_broker_url: str
+    celery_result_backend: str
+
 
 settings = Settings()
