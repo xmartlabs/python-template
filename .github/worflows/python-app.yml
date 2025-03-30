@@ -1,0 +1,74 @@
+name: CI Pipeline Template
+
+'on':
+  push:
+    branches:
+      - feat/github_actions
+  pull_request:
+    branches:
+      - feat/github_actions
+
+jobs:
+  lint-and-format:
+    name: Run Linters & Formatters
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
+
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install --no-root --with dev
+
+      - name: Run linters and formatters
+        run: |
+          poetry run python -m pycln src --exclude __init__.py --all
+          poetry run python -m isort src
+          poetry run python -m mypy src
+          poetry run python -m black src --quiet --exclude alembic
+          poetry run python -m flake8 src
+
+  tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-format
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
+
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install --no-root --with dev
+
+      - name: Run tests with coverage
+        run: |
+          poetry run pytest --cov=src --cov-report=xml --cov-fail-under=80
+
+      - name: Test coverage
+        run: |
+          poetry run coverage run -m pytest src
+          poetry run coverage report -m --fail-under=80
+
+  docker-build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t python-template:latest .
