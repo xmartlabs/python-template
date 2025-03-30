@@ -54,10 +54,6 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          poetry run pytest --cov=src --cov-report=xml --cov-fail-under=80
-
-      - name: Test coverage
-        run: |
           poetry run coverage run -m pytest
           poetry run coverage report -m --fail-under=80
 
