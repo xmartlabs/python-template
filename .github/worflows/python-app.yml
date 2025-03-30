@@ -3,10 +3,10 @@ name: CI Pipeline Template
 'on':
   push:
     branches:
-      - feat/github_actions
+      - '**'
   pull_request:
     branches:
-      - feat/github_actions
+      - '**'
 
 jobs:
   lint-and-format:
@@ -58,7 +58,7 @@ jobs:
 
       - name: Test coverage
         run: |
-          poetry run coverage run -m pytest src
+          poetry run coverage run -m pytest
           poetry run coverage report -m --fail-under=80
 
   docker-build:
