@@ -54,7 +54,19 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          echo "DATABASE_URL=postgresql://dev:dev@postgres:5432/dev" > .env
+          echo "PROJECT_NAME=python-template" > .env
+          echo "DATABASE_URL=postgresql://dev:dev@postgres:5432/dev" >> .env
+          echo "ASYNC_DATABASE_URL=postgresql+asyncpg://dev:dev@postgres:5432/dev" >> .env
+          echo "DATABASE_POOL_PRE_PING=True" >> .env
+          echo "DATABASE_POOL_SIZE=5" >> .env
+          echo "DATABASE_POOL_RECYCLE=3600" >> .env
+          echo "DATABASE_MAX_OVERFLOW=10" >> .env
+          echo "LOG_LEVEL=DEBUG" >> .env
+          echo "SERVER_URL=example.com" >> .env
+          echo "ACCESS_TOKEN_EXPIRE_MINUTES=15" >> .env
+          echo "JWT_SIGNING_KEY=" >> .env
+          echo "CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672" >> .env
+          echo "CELERY_RESULT_BACKEND=redis://redis:6379/0" >> .env
           docker compose -f .devcontainer/docker-compose.yaml -p python-template up -d postgres
           poetry run coverage run -m pytest
           poetry run coverage report -m --fail-under=80
