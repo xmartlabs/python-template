@@ -15,19 +15,19 @@ class LogLevel(str, Enum):
 class Settings(BaseSettings):
     # Database
     database_url: PostgresDsn
-    async_database_url: PostgresDsn
-    database_pool_pre_ping: bool
-    database_pool_size: int
-    database_pool_recycle: int
-    database_max_overflow: int
+    async_database_url: PostgresDsn | None = None
+    database_pool_pre_ping: bool | None = None
+    database_pool_size: int | None = None
+    database_pool_recycle: int | None = None
+    database_max_overflow: int | None = None
 
     # Logging
     log_level: LogLevel = LogLevel.debug
-    server_url: str
+    server_url: str | None = None
 
     # Auth
-    access_token_expire_minutes: float
-    jwt_signing_key: str
+    access_token_expire_minutes: float | None = None
+    jwt_signing_key: str | None = None
     accept_cookie: bool = True
     accept_token: bool = True
 
