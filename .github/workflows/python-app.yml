@@ -51,11 +51,12 @@ jobs:
         run: |
           pip install poetry
           poetry install --no-root --with dev
-      
+
       - name: Load DB
         run: |
+          echo "DATABASE_URL=postgresql://dev:dev@postgres:5432/dev" > .env
           docker compose -f .devcontainer/docker-compose.yaml -p python-template up postgres
-          
+
       - name: Run tests with coverage
         run: |
           poetry run coverage run -m pytest
