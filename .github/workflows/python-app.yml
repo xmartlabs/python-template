@@ -51,7 +51,11 @@ jobs:
         run: |
           pip install poetry
           poetry install --no-root --with dev
-
+      
+      - name: Load DB
+        run: |
+          docker compose -f .devcontainer/docker-compose.yaml -p python-template up postgres
+          
       - name: Run tests with coverage
         run: |
           poetry run coverage run -m pytest
