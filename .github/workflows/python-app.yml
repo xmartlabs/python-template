@@ -39,11 +39,32 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint-and-format
     timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: dev
+          POSTGRES_PASSWORD: dev
+          POSTGRES_DB: dev
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dev -d dev"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
-      PGHOST: postgres
-      PGDATABASE: dev
-      PGUSERNAME: dev
-      PGPASSWORD: dev
+      PROJECT_NAME: python-template
+      DATABASE_URL: postgresql://dev:dev@postgres:5432/dev
+      ASYNC_DATABASE_URL: postgresql+asyncpg://dev:dev@postgres:5432/dev
+      DATABASE_POOL_PRE_PING: True
+      DATABASE_POOL_SIZE: 5
+      DATABASE_POOL_RECYCLE: 3600
+      DATABASE_MAX_OVERFLOW: 10
+      LOG_LEVEL: DEBUG
+      SERVER_URL: example.com
+      ACCESS_TOKEN_EXPIRE_MINUTES: 15
+      JWT_SIGNING_KEY: your-signing-key
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -58,54 +79,10 @@ jobs:
           pip install poetry
           poetry install --no-root --with dev
       
-
-      - name: Add PostgreSQL binaries to PATH
-        shell: bash
-        run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            echo "$PGBIN" >> $GITHUB_PATH
-          elif [ "$RUNNER_OS" == "Linux" ]; then
-            echo "$(pg_config --bindir)" >> $GITHUB_PATH
-          fi
-      - name: Start preinstalled PostgreSQL
-        shell: bash
-        run: |
-          echo "Initializing database cluster..."
-
-          export PGHOST="${RUNNER_TEMP//\\//}/postgres"
-          export PGDATA="$PGHOST/pgdata"
-          mkdir -p "$PGDATA"
-
-          export PWFILE="$RUNNER_TEMP/pwfile"
-          echo "postgres" > $PWFILE
-          initdb --pgdata="$PGDATA" --username="postgres" --pwfile="$PWFILE"
-
-          echo "Starting PostgreSQL..."
-          echo "unix_socket_directories = '$PGHOST'" >> "$PGDATA/postgresql.conf"
-          pg_ctl start
-
-          echo "Creating user..."
-          psql --host "$PGHOST" --username="postgres" --dbname="postgres" --command="CREATE USER $PGUSERNAME PASSWORD '$PGPASSWORD'" --command="\du"
-
-          echo "Creating database..."
-          createdb --owner="$PGUSERNAME" --username="postgres" "$PGDATABASE"
-      
       - name: Run tests with coverage
         run: |
-          echo "PROJECT_NAME=python-template" > .env
-                echo "DATABASE_URL=postgresql://dev:dev@postgres:5432/dev" >> .env
-                echo "ASYNC_DATABASE_URL=postgresql+asyncpg://dev:dev@postgres:5432/dev" >> .env
-                echo "DATABASE_POOL_PRE_PING=True" >> .env
-                echo "DATABASE_POOL_SIZE=5" >> .env
-                echo "DATABASE_POOL_RECYCLE=3600" >> .env
-                echo "DATABASE_MAX_OVERFLOW=10" >> .env
-                echo "LOG_LEVEL=DEBUG" >> .env
-                echo "SERVER_URL=example.com" >> .env
-                echo "ACCESS_TOKEN_EXPIRE_MINUTES=15" >> .env
-                echo "JWT_SIGNING_KEY=your-signing-key" >> .env
-                export $(cat .env | xargs)
-                poetry run coverage run -m pytest
-                poetry run coverage report -m --fail-under=80
+          poetry run coverage run -m pytest
+          poetry run coverage report -m --fail-under=80
 
   docker-build:
     name: Build Docker Image
