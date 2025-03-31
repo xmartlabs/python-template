@@ -38,6 +38,12 @@ jobs:
     name: Run Tests
     runs-on: ubuntu-latest
     needs: lint-and-format
+    timeout-minutes: 15
+    env:
+      PGHOST: postgres
+      PGDATABASE: dev
+      PGUSERNAME: dev
+      PGPASSWORD: dev
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -51,7 +57,39 @@ jobs:
         run: |
           pip install poetry
           poetry install --no-root --with dev
+      
 
+      - name: Add PostgreSQL binaries to PATH
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            echo "$PGBIN" >> $GITHUB_PATH
+          elif [ "$RUNNER_OS" == "Linux" ]; then
+            echo "$(pg_config --bindir)" >> $GITHUB_PATH
+          fi
+      - name: Start preinstalled PostgreSQL
+        shell: bash
+        run: |
+          echo "Initializing database cluster..."
+
+          export PGHOST="${RUNNER_TEMP//\\//}/postgres"
+          export PGDATA="$PGHOST/pgdata"
+          mkdir -p "$PGDATA"
+
+          export PWFILE="$RUNNER_TEMP/pwfile"
+          echo "postgres" > $PWFILE
+          initdb --pgdata="$PGDATA" --username="postgres" --pwfile="$PWFILE"
+
+          echo "Starting PostgreSQL..."
+          echo "unix_socket_directories = '$PGHOST'" >> "$PGDATA/postgresql.conf"
+          pg_ctl start
+
+          echo "Creating user..."
+          psql --host "$PGHOST" --username="postgres" --dbname="postgres" --command="CREATE USER $PGUSERNAME PASSWORD '$PGPASSWORD'" --command="\du"
+
+          echo "Creating database..."
+          createdb --owner="$PGUSERNAME" --username="postgres" "$PGDATABASE"
+      
       - name: Run tests with coverage
         run: |
           echo "PROJECT_NAME=python-template" > .env
@@ -65,9 +103,6 @@ jobs:
                 echo "SERVER_URL=example.com" >> .env
                 echo "ACCESS_TOKEN_EXPIRE_MINUTES=15" >> .env
                 echo "JWT_SIGNING_KEY=your-signing-key" >> .env
-                echo "CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672" >> .env
-                echo "CELERY_RESULT_BACKEND=redis://redis:6379/0" >> .env
-                docker compose -f .devcontainer/docker-compose.yaml -p python-template up -d postgres
                 export $(cat .env | xargs)
                 poetry run coverage run -m pytest
                 poetry run coverage report -m --fail-under=80
