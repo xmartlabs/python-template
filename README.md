@@ -85,7 +85,7 @@ The template includes an admin interface via [SQLAdmin](https://github.com/amina
 ![Screenshot](.docs/images/admin.png)
 
 ## Celery
-The template includes a simple example of distributed tasks using [Celery](https://docs.celeryq.dev/en/stable/). There's an example endpoint which sends a task to the queue and then the celery worker will execute it. You can monitor the worker with [Flower](https://flower.readthedocs.io/en/latest/) by simply going to `localhost:5555`.
+The template includes a simple example of distributed tasks using [Celery](https://docs.celeryq.dev/en/stable/). There's an example endpoint which sends a task to the queue and then the celery worker will execute it. You can monitor the worker with [Flower](https://flower.readthedocs.io/en/latest/), to do so first execute `poetry run celery -A src.task_queue.celery_worker flower --loglevel=info` and then go to `localhost:5555`.
 
 In case you want to implement some real-world task you should modify the `src/task_queue/task.py` with your logic and then modify `src/api/v1/routers/task.py`.
 Remember to always add all your tasks modules to the `src/task_queue/celery_worker.py` with `celery_worker.autodiscover_tasks(["path.to.your.task.module"])`.

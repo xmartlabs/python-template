@@ -7,8 +7,7 @@
     "postgres",
     "rabbitmq",
     "redis",
-    "celery_worker",
-    "flower"
+    "celery_worker"
   ],
   "workspaceFolder": "/opt/app/${localEnv:PROJECT_NAME:python-template}",
   "containerEnv": {
@@ -71,9 +70,6 @@
     // Redis:
     //   localhost:6379 for accessing redis via local redis-cli
     "redis:6379",
-    // Flower:
-    //   localhost:5555 for accessing flower web ui
-    "flower:5555",
     // RabbitMQ:
     //   localhost:5672 for accessing rabbitmq via local rabbitmq-cli
     "rabbitmq:5672"
@@ -89,10 +85,6 @@
     },
     "6379": {
       "label": "Redis",
-      "onAutoForward": "silent"
-    },
-    "5555": {
-      "label": "Flower",
       "onAutoForward": "silent"
     },
     "5672": {

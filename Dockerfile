@@ -69,6 +69,12 @@ RUN poetry install --no-root --all-groups
 CMD ["sleep", "infinity"]
 
 # ----
+# Celery worker stage
+FROM base AS celery_worker
+
+CMD ["poetry", "run", "celery", "-A", "src.task_queue.celery_worker", "worker", "--loglevel=info"]
+
+# ----
 # Builder will package the app for deployment
 FROM base AS builder
 

@@ -47,25 +47,12 @@ services:
   celery_worker:
     build:
       context: ../
-      dockerfile: Dockerfile.celery
-    command: poetry run celery -A src.task_queue.celery_worker worker --loglevel=info
+      dockerfile: Dockerfile
+      target: celery_worker
     env_file: ../.env
     depends_on:
       - rabbitmq
       - redis
-
-  flower:
-    build:
-      context: ../
-      dockerfile: Dockerfile.celery
-    command: poetry run celery -A src.task_queue.celery_worker flower --loglevel=info
-    ports:
-      - '5556:5555'
-    env_file: ../.env
-    depends_on:
-      - rabbitmq
-      - redis
-      - celery_worker
 
 volumes:
   postgres: {}
