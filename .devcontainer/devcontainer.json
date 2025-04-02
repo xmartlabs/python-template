@@ -4,7 +4,10 @@
   "service": "devcontainer",
   "runServices": [
     "devcontainer",
-    "postgres"
+    "postgres",
+    "rabbitmq",
+    "redis",
+    "celery_worker"
   ],
   "workspaceFolder": "/opt/app/${localEnv:PROJECT_NAME:python-template}",
   "containerEnv": {
@@ -63,7 +66,13 @@
     "devcontainer:8000",
     // Postgres:
     //   localhost:5432 for accessing postgres via local dbeaver/psql client
-    "postgres:5432"
+    "postgres:5432",
+    // Redis:
+    //   localhost:6379 for accessing redis via local redis-cli
+    "redis:6379",
+    // RabbitMQ:
+    //   localhost:5672 for accessing rabbitmq via local rabbitmq-cli
+    "rabbitmq:5672"
   ],
   "portsAttributes": {
     "5432": {
@@ -73,6 +82,14 @@
     "8000": {
       "label": "Backend API",
       "onAutoForward": "notify"
+    },
+    "6379": {
+      "label": "Redis",
+      "onAutoForward": "silent"
+    },
+    "5672": {
+      "label": "RabbitMQ",
+      "onAutoForward": "silent"
     }
   }
 }
