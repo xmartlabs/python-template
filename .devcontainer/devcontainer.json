@@ -7,7 +7,8 @@
     "postgres",
     "rabbitmq",
     "redis",
-    "celery_worker"
+    "celery_worker",
+    "otel-collector"
   ],
   "workspaceFolder": "/opt/app/${localEnv:PROJECT_NAME:python-template}",
   "containerEnv": {
@@ -72,7 +73,10 @@
     "redis:6379",
     // RabbitMQ:
     //   localhost:5672 for accessing rabbitmq via local rabbitmq-cli
-    "rabbitmq:5672"
+    "rabbitmq:5672",
+    // OpenTelemetry Collector:
+    //   localhost:4317 for accessing opentelemetry collector via local otel-cli
+    "otel-collector:4317"
   ],
   "portsAttributes": {
     "5432": {
@@ -89,6 +93,10 @@
     },
     "5672": {
       "label": "RabbitMQ",
+      "onAutoForward": "silent"
+    },
+    "4317": {
+      "label": "OpenTelemetry Collector",
       "onAutoForward": "silent"
     }
   }
