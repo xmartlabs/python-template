@@ -33,6 +33,27 @@ services:
         target: /var/lib/postgresql/data
         type: volume
 
+  redis:
+    image: redis:8.0-M04-alpine
+    ports:
+      - '6379:6379'
+
+  rabbitmq:
+    image: rabbitmq:4.1-rc-management-alpine
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
+  celery_worker:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+      target: celery_worker
+    env_file: ../.env
+    depends_on:
+      - rabbitmq
+      - redis
+
 volumes:
   postgres: {}
   cache: {}

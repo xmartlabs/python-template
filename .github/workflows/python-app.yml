@@ -64,7 +64,6 @@ jobs:
       LOG_LEVEL: DEBUG
       SERVER_URL: example.com
       ACCESS_TOKEN_EXPIRE_MINUTES: 15
-      JWT_SIGNING_KEY: your-signing-key
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -78,7 +77,7 @@ jobs:
         run: |
           pip install poetry
           poetry install --no-root --with dev
-      
+
       - name: Run tests with coverage
         run: |
           poetry run coverage run -m pytest
