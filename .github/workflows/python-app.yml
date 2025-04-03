@@ -64,6 +64,7 @@ jobs:
       LOG_LEVEL: DEBUG
       SERVER_URL: example.com
       ACCESS_TOKEN_EXPIRE_MINUTES: 15
+      JWT_SIGNING_KEY: your-signing-key
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
