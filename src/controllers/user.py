@@ -3,11 +3,13 @@ from fastapi import HTTPException
 from src.api.v1.schemas import UserCreate
 from src.core.database import Session
 from src.core.security import PasswordManager
+from src.core.trace import instrument
 from src.models import User
 
 
 class UserController:
     @staticmethod
+    @instrument(name="calling_user_controller_create")
     def create(user_data: UserCreate, session: Session) -> User:
         user = User.objects(session).get(User.email == user_data.email)
         if user:
@@ -18,6 +20,7 @@ class UserController:
         return user
 
     @staticmethod
+    @instrument(name="calling_user_controller_login")
     def login(user_data: UserCreate, session: Session) -> User:
         login_exception = HTTPException(
             status_code=401, detail="Invalid email or password"

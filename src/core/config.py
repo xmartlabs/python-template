@@ -35,5 +35,8 @@ class Settings(BaseSettings):
     celery_broker_url: str
     celery_result_backend: str
 
+    # OpenTelemetry
+    otel_exporter_otlp_endpoint: str
+
 
 settings = Settings()

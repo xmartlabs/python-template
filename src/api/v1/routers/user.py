@@ -12,6 +12,7 @@ from src.api.v1.schemas import Item, Token, UserCreate
 from src.controllers import UserController
 from src.core.database import Session
 from src.core.security import AuthManager
+from src.core.trace import tracer_provider
 
 router = APIRouter()
 
@@ -43,5 +44,6 @@ def me(user: models.User = Depends(get_user)) -> Any:
 
 @router.get("/{user_id}/items", response_model=Page[Item])
 def get_public_items(user_id: UUID, session: Session = Depends(db_session)) -> Any:
-    user = models.User.objects(session).get_or_404(models.User.id == user_id)
+    with tracer_provider.get_tracer(__name__).start_as_current_span("get_public_items"):
+        user = models.User.objects(session).get_or_404(models.User.id == user_id)
     return paginate(session, user.get_public_items())
