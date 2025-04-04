@@ -28,11 +28,9 @@ jobs:
 
       - name: Run linters and formatters
         run: |
-          poetry run python -m pycln src --exclude __init__.py --all
-          poetry run python -m isort src
-          poetry run python -m mypy src
-          poetry run python -m black src --quiet --exclude alembic
-          poetry run python -m flake8 src
+          poetry run python -m ruff check --fix src
+          poetry run python -m ruff format --check src
+          poetry run python -m mypy src --exclude 'src/alembic/'
 
   tests:
     name: Run Tests
@@ -87,13 +85,30 @@ jobs:
           poetry run coverage report -m --fail-under=80
 
   docker-build:
-    name: Build Docker Image
-    runs-on: ubuntu-latest
-    needs: tests
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  name: Build Docker Image
+  runs-on: ubuntu-latest
+  needs: tests
 
-      - name: Build Docker image
-        run: |
-          docker build -t python-template:latest .
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Cache Docker layers
+      uses: actions/cache@v4
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-docker-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-docker-
+
+    - name: Build image with cache
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: false
+        tags: python-template:latest
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache,mode=max

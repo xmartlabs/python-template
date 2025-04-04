@@ -51,9 +51,7 @@ def _on_handle_error(context: ExceptionContext) -> None:
     Returns:
         None: this returns nothing.
     """
-    logging.warning(
-        f"handle_error event triggered for PostgreSQL engine: {context.sqlalchemy_exception}"
-    )
+    logging.warning(f"handle_error event triggered for PostgreSQL engine: {context.sqlalchemy_exception}")
     if "Can't connect to PostgreSQL server on" in str(context.sqlalchemy_exception):
         # Setting is_disconnect to True should tell SQLAlchemy treat this as a connection error and retry
         context.is_disconnect = True  # type: ignore
@@ -74,9 +72,7 @@ async_engine: AsyncEngine = create_async_engine(
 
 
 def async_session_generator() -> async_sessionmaker[AsyncSession]:
-    return async_sessionmaker(
-        autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession
-    )
+    return async_sessionmaker(autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession)
 
 
 class SQLBase(DeclarativeBase):
@@ -91,9 +87,7 @@ class SQLBase(DeclarativeBase):
         return Objects(cls, session)
 
     @classmethod
-    def async_objects(
-        cls: Type["_Model"], session: AsyncSession
-    ) -> "AsyncObjects[_Model]":
+    def async_objects(cls: Type["_Model"], session: AsyncSession) -> "AsyncObjects[_Model]":
         return AsyncObjects(cls, session)
 
 
@@ -130,9 +124,7 @@ class Objects(Generic[_Model]):
     def get_or_404(self, *where_clause: Any) -> _Model:
         obj = self.get(*where_clause)
         if obj is None:
-            raise HTTPException(
-                status_code=404, detail=f"{self.cls.__name__} not found"
-            )
+            raise HTTPException(status_code=404, detail=f"{self.cls.__name__} not found")
         return obj
 
     def get_all(self, *where_clause: Any) -> Sequence[_Model]:
@@ -188,9 +180,7 @@ class AsyncObjects(Generic[_Model]):
     async def get_or_404(self, *where_clause: Any) -> _Model:
         obj = await self.get(*where_clause)
         if obj is None:
-            raise HTTPException(
-                status_code=404, detail=f"{self.cls.__name__} not found"
-            )
+            raise HTTPException(status_code=404, detail=f"{self.cls.__name__} not found")
         return obj
 
     async def get_all(self, *where_clause: Any) -> Sequence[_Model]:
@@ -224,14 +214,10 @@ class AsyncObjects(Generic[_Model]):
 
 @declarative_mixin
 class TableIdMixin:
-    id: Mapped[uuid.UUID] = mapped_column(
-        primary_key=True, server_default=random_uuid()
-    )
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, server_default=random_uuid())
 
 
 @declarative_mixin
 class DatedTableMixin(TableIdMixin):
     created_at: Mapped[datetime] = mapped_column(server_default=utcnow())
-    updated_at: Mapped[datetime] = mapped_column(
-        server_default=utcnow(), onupdate=datetime.now(timezone.utc)
-    )
+    updated_at: Mapped[datetime] = mapped_column(server_default=utcnow(), onupdate=datetime.now(timezone.utc))
