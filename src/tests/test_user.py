@@ -48,9 +48,7 @@ class TestUser:
 
     @reset_database
     def test_signup(self) -> None:
-        expected_expire = datetime.now(timezone.utc) + timedelta(
-            minutes=settings.access_token_expire_minutes
-        )
+        expected_expire = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_expire_minutes)
         response = client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         assert response.status_code == 201
         data = response.json()
@@ -75,9 +73,7 @@ class TestUser:
     @reset_database
     def test_login(self) -> None:
         client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
-        expected_expire = datetime.now(timezone.utc) + timedelta(
-            minutes=settings.access_token_expire_minutes
-        )
+        expected_expire = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_expire_minutes)
         response = client.post(self.LOGIN_URL, json=self.TEST_PAYLOAD)
         assert response.status_code == 200
         data = response.json()
@@ -127,9 +123,7 @@ class TestUser:
     def test_me_bad_access_token(self) -> None:
         client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         client.cookies.clear()
-        response = client.get(
-            self.ME_URL, headers={AuthManager.header_name: self.BAD_TOKEN}
-        )
+        response = client.get(self.ME_URL, headers={AuthManager.header_name: self.BAD_TOKEN})
         assert response.status_code == 401
 
     @reset_database

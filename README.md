@@ -26,6 +26,8 @@ Alternatively, you must have:
 - [Poetry](https://python-poetry.org/docs/#installation) (don't forget to install the dependencies from the lock file)
 - [PostgreSQL](https://www.postgresql.org/) database, setting the corresponding environment variables for the database connection.
 
+For making code changes, installing `pre-commit` is necessary (see section [Code tools: pre-commit](#pre-commit))
+
 ### Customization
 
 The project's name (`python-template`) can be edited following next steps:
@@ -50,11 +52,25 @@ We use Alembic as database migration tool. You can run migration commands direct
 ## Code tools
 Linters, formatters, etc.
 
-- **Pycln**: Formatter for finding and removing unused import statements.
-- **isort**: Tool to sort imports alphabetically and automatically separate into sections by type.
-- **flake8**: Linting tool
+- **ruff**: Linter and formatter
 - **mypy**: Static type checker
-- **black**: PEP 8 compliant opinionated formatter
+
+### pre-commit
+`pre-commit` is part of the `dev` group in the `pyproject.toml` and is installed by default.
+
+Setup the `pre-commit` hooks, specified in `.pre-commit-config.yaml`:
+
+    pre-commit install
+
+Ensure everything was set up correctly by running the hooks:
+
+    pre-commit run --all-files
+
+![Screenshot](.docs/images/pre-commit.png)
+
+#### Adding hooks
+
+You can add new `pre-commit` hooks by editing `.pre-commit-config.yaml`. Whenever new hooks are added, you must run `pre-commit install` to ensure new hooks are run on commit.
 
 There is a shortcut under the `/scripts` directory that runs all this tools for you (`./exec.sh format`) or just run `format` inside the dev container.
 

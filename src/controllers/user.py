@@ -19,9 +19,7 @@ class UserController:
 
     @staticmethod
     def login(user_data: UserCreate, session: Session) -> User:
-        login_exception = HTTPException(
-            status_code=401, detail="Invalid email or password"
-        )
+        login_exception = HTTPException(status_code=401, detail="Invalid email or password")
         user = User.objects(session).get(User.email == user_data.email)
         if not user:
             raise login_exception

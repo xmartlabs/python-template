@@ -14,9 +14,7 @@ router = APIRouter()
 
 
 @router.get("", response_model=Page[Item])
-def get_items(
-    user: User = Depends(get_user), session: Session = Depends(db_session)
-) -> Any:
+def get_items(user: User = Depends(get_user), session: Session = Depends(db_session)) -> Any:
     return paginate(session, user.get_items())
 
 
@@ -45,6 +43,4 @@ async def create_item_async(
     async_session: AsyncSession = Depends(async_db_session),
 ) -> Any:
     """Create items asynchronously."""
-    return await ItemController.bulk_create(
-        items_data=item_data.items, owner_id=user.id, async_session=async_session
-    )
+    return await ItemController.bulk_create(items_data=item_data.items, owner_id=user.id, async_session=async_session)
