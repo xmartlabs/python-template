@@ -25,12 +25,11 @@ jobs:
         run: |
           pip install poetry
           poetry install --no-root --with dev
-
+      
+      - name: Install pre-commit
+        run: pip install pre-commit
       - name: Run linters and formatters
-        run: |
-          poetry run python -m ruff check --fix src
-          poetry run python -m ruff format --check src
-          poetry run python -m mypy src --exclude 'src/alembic/'
+        run: pre-commit run --all-files
 
   tests:
     name: Run Tests
