@@ -37,6 +37,7 @@ class Settings(BaseSettings):
 
     # OpenTelemetry
     otel_exporter_otlp_endpoint: str
+    env: str = "dev"
 
 
 settings = Settings()

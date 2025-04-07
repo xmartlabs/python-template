@@ -10,13 +10,13 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from src.core.config import settings
 
 # Configure OpenTelemetry
-resource = Resource(attributes={"service.name": "python-template"})
+resource = Resource(attributes={"service.name": settings.env})
 tracer_provider = TracerProvider(resource=resource)
 otlp_exporter = OTLPSpanExporter(
     endpoint=settings.otel_exporter_otlp_endpoint, insecure=True
 )
 otlp_metric_exporter = OTLPMetricExporter(
-    endpoint="http://otel-collector:4317", insecure=True
+    endpoint=settings.otel_exporter_otlp_endpoint, insecure=True
 )
 span_processor = BatchSpanProcessor(otlp_exporter)
 tracer_provider.add_span_processor(span_processor)

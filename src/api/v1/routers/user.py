@@ -44,6 +44,9 @@ def me(user: models.User = Depends(get_user)) -> Any:
 
 @router.get("/{user_id}/items", response_model=Page[Item])
 def get_public_items(user_id: UUID, session: Session = Depends(db_session)) -> Any:
+    # We can't use the @instrument decorator here because it will collide with the
+    # FastAPIinstrumentor and cause the span to be created twice.
+    # So we need to create the span manually.
     with tracer_provider.get_tracer(__name__).start_as_current_span("get_public_items"):
         user = models.User.objects(session).get_or_404(models.User.id == user_id)
     return paginate(session, user.get_public_items())
