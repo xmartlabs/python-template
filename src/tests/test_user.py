@@ -31,7 +31,6 @@ class TestUser:
         async_session = async_session_generator()
         async with async_session() as session:
             user = await User.objects(session).get(User.email == self.TEST_EMAIL)
-            await session.refresh(user)
             assert user is not None
             assert user.email == self.TEST_EMAIL
             assert PasswordManager.verify_password(self.TEST_PASSWORD, user.password)

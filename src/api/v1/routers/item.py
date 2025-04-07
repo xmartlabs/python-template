@@ -31,16 +31,7 @@ async def create_item(
     )
 
 
-@router.get("/async", response_model=Page[Item])
-async def get_items_async(
-    user: User = Depends(get_user),
-    session: AsyncSession = Depends(db_session),
-) -> Any:
-    """Get items asynchronously."""
-    return await paginate(session, user.get_items())
-
-
-@router.post("/async", response_model=list[Item], status_code=201)
+@router.post("/bulk", response_model=list[Item], status_code=201)
 async def create_item_async(
     item_data: BulkItemCreate,
     user: User = Depends(get_user),

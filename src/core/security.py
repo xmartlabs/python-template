@@ -72,7 +72,6 @@ class AuthManager:
         except (JWTError, ValidationError):
             raise self.credentials_exception
         user = await User.objects(session).get(User.id == token_data.user_id)
-        await session.refresh(user)
         if not user:
             raise self.credentials_exception
         return user
