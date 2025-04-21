@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse
 from sqladmin import ModelView
 from sqladmin.authentication import AuthenticationBackend
 
-from src.core.database import SessionLocal
+from src.core.database import async_session_generator
 from src.core.security import AuthManager, PasswordManager
 from src.models import Item, User
 
@@ -14,8 +14,10 @@ class AdminAuth(AuthenticationBackend):
     async def login(self, request: Request) -> bool:
         form = await request.form()
         email, password = form["username"], form["password"]
-        with SessionLocal() as session:
-            user = User.objects(session).get(User.email == email)
+        async_session = async_session_generator()
+        async with async_session() as session:
+            user = await User.objects(session).get(User.email == email)
+            await session.refresh(user)
         if not user or not user.is_superuser:
             return False
         if not PasswordManager.verify_password(password, user.password):  # type: ignore[arg-type]
@@ -35,12 +37,14 @@ class AdminAuth(AuthenticationBackend):
         if not token:
             return failed_auth_response
         try:
-            session = SessionLocal()
-            user = manager.get_user_from_token(token=token, session=session)
+            async_session = async_session_generator()
+            async with async_session() as session:
+                user = await manager.get_user_from_token(token=token, session=session)
+                await session.refresh(user)
         except Exception:
             return failed_auth_response
         finally:
-            session.close()
+            await session.close()
         if not user.is_superuser:
             return failed_auth_response
         return True
