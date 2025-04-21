@@ -10,13 +10,9 @@ class TaskCreate(BaseModel):
 
 
 class Task(BaseModel):
-    task_id: UUID = Field(
-        ..., description="Task ID", examples=["7ce6afd6-bc66-4db1-bf31-b99e6daa0f11"]
-    )
+    task_id: UUID = Field(..., description="Task ID", examples=["7ce6afd6-bc66-4db1-bf31-b99e6daa0f11"])
 
 
 class TaskResult(Task):
-    task_status: str = Field(
-        ..., description="Task status", examples=["SUCCESS", "FAILURE"]
-    )
+    task_status: str = Field(..., description="Task status", examples=["SUCCESS", "FAILURE"])
     task_result: int | None = Field(None, description="Task result", examples=[6, None])

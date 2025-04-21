@@ -21,9 +21,7 @@ async_engine = create_async_engine(
 
 
 def async_session_generator() -> async_sessionmaker[AsyncSession]:
-    return async_sessionmaker(
-        autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession
-    )
+    return async_sessionmaker(autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession)
 
 
 async def override_get_db() -> AsyncIterator[AsyncSession]:

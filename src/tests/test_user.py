@@ -50,12 +50,8 @@ class TestUser:
         assert data["is_active"] == True  # noqa: E712
         assert data["is_superuser"] == False  # noqa: E712
 
-    async def test_signup(
-        self, reset_database: AsyncGenerator, async_client: AsyncClient
-    ) -> None:
-        expected_expire = datetime.now(timezone.utc) + timedelta(
-            minutes=settings.access_token_expire_minutes
-        )
+    async def test_signup(self, reset_database: AsyncGenerator, async_client: AsyncClient) -> None:
+        expected_expire = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_expire_minutes)
 
         response = await async_client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         assert response.status_code == 201
@@ -70,22 +66,16 @@ class TestUser:
         response = await async_client.post(self.SIGNUP_URL)
         assert response.status_code == 422
 
-    async def test_signup_dup_emails(
-        self, reset_database: AsyncGenerator, async_client: AsyncClient
-    ) -> None:
+    async def test_signup_dup_emails(self, reset_database: AsyncGenerator, async_client: AsyncClient) -> None:
         await async_client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         response = await async_client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         assert response.status_code == 409
         data = response.json()
         assert data["detail"] == "Email address already in use"
 
-    async def test_login(
-        self, reset_database: AsyncGenerator, async_client: AsyncClient
-    ) -> None:
+    async def test_login(self, reset_database: AsyncGenerator, async_client: AsyncClient) -> None:
         await async_client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
-        expected_expire = datetime.now(timezone.utc) + timedelta(
-            minutes=settings.access_token_expire_minutes
-        )
+        expected_expire = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_expire_minutes)
         response = await async_client.post(self.LOGIN_URL, json=self.TEST_PAYLOAD)
         assert response.status_code == 200
         data = response.json()
@@ -99,58 +89,40 @@ class TestUser:
         response = await async_client.post(self.LOGIN_URL)
         assert response.status_code == 422
 
-    async def test_login_fail(
-        self, reset_database: AsyncGenerator, async_client: AsyncClient
-    ) -> None:
+    async def test_login_fail(self, reset_database: AsyncGenerator, async_client: AsyncClient) -> None:
         response = await async_client.post(self.LOGIN_URL, json=self.TEST_PAYLOAD)
         self.check_login_fail(response=response)
 
-    async def test_login_bad_password(
-        self, reset_database: AsyncGenerator, async_client: AsyncClient
-    ) -> None:
+    async def test_login_bad_password(self, reset_database: AsyncGenerator, async_client: AsyncClient) -> None:
         await async_client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         payload = {"email": self.TEST_EMAIL, "password": "oops"}
         response = await async_client.post(self.LOGIN_URL, json=payload)
         self.check_login_fail(response=response)
 
-    async def test_me_header(
-        self, reset_database: AsyncGenerator, async_client: AsyncClient
-    ) -> None:
+    async def test_me_header(self, reset_database: AsyncGenerator, async_client: AsyncClient) -> None:
         sign_up_resp = await async_client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         data = sign_up_resp.json()
         token = f"Bearer {data['access_token']}"
         async_client.cookies.clear()
-        response = await async_client.get(
-            self.ME_URL, headers={AuthManager.header_name: token}
-        )
+        response = await async_client.get(self.ME_URL, headers={AuthManager.header_name: token})
         self.check_me_response(response=response)
 
-    async def test_me_cookie(
-        self, reset_database: AsyncGenerator, async_client: AsyncClient
-    ) -> None:
+    async def test_me_cookie(self, reset_database: AsyncGenerator, async_client: AsyncClient) -> None:
         await async_client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         response = await async_client.get(self.ME_URL)
         self.check_me_response(response=response)
 
-    async def test_me_unauthenticated(
-        self, reset_database: AsyncGenerator, async_client: AsyncClient
-    ) -> None:
+    async def test_me_unauthenticated(self, reset_database: AsyncGenerator, async_client: AsyncClient) -> None:
         response = await async_client.get(self.ME_URL)
         assert response.status_code == 401
 
-    async def test_me_bad_access_token(
-        self, reset_database: AsyncGenerator, async_client: AsyncClient
-    ) -> None:
+    async def test_me_bad_access_token(self, reset_database: AsyncGenerator, async_client: AsyncClient) -> None:
         await async_client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         async_client.cookies.clear()
-        response = await async_client.get(
-            self.ME_URL, headers={AuthManager.header_name: self.BAD_TOKEN}
-        )
+        response = await async_client.get(self.ME_URL, headers={AuthManager.header_name: self.BAD_TOKEN})
         assert response.status_code == 401
 
-    async def test_me_bad_cookie(
-        self, reset_database: AsyncGenerator, async_client: AsyncClient
-    ) -> None:
+    async def test_me_bad_cookie(self, reset_database: AsyncGenerator, async_client: AsyncClient) -> None:
         await async_client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         async_client.cookies.clear()
         async_client.cookies.set(name=AuthManager.cookie_name, value=self.BAD_TOKEN)
@@ -158,9 +130,7 @@ class TestUser:
         assert response.status_code == 401
 
     @patch.object(settings, "access_token_expire_minutes", 0.02)
-    async def test_expired_token(
-        self, reset_database: AsyncGenerator, async_client: AsyncClient
-    ) -> None:
+    async def test_expired_token(self, reset_database: AsyncGenerator, async_client: AsyncClient) -> None:
         await async_client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         time.sleep(3)
         response = await async_client.get(self.ME_URL)

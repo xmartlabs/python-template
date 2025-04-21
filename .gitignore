@@ -27,6 +27,8 @@ logs/*
 .ptpython-history
 .mypy_cache
 .pytest_cache
+.coverage
+*.coverage
 
 .devcontainer/commandhistory
 !.devcontainer/commandhistory/.gitkeep
