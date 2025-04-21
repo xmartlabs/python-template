@@ -14,7 +14,7 @@ async def reset_database() -> AsyncGenerator:
         await conn.run_sync(SQLBase.metadata.drop_all)
         await conn.run_sync(SQLBase.metadata.create_all)
 
-    yield  # Aquí se ejecuta el test
+    yield  # Run tests
 
     async with async_engine.begin() as conn:
         await conn.run_sync(SQLBase.metadata.drop_all)
