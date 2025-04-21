@@ -25,7 +25,7 @@ jobs:
         run: |
           pip install poetry
           poetry install --no-root --with dev
-      
+
       - name: Install pre-commit
         run: pip install pre-commit
       - name: Run linters and formatters
@@ -64,6 +64,7 @@ jobs:
       JWT_SIGNING_KEY: your-signing-key
       CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672
       CELERY_RESULT_BACKEND: redis://redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
