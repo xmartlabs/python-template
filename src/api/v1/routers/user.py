@@ -42,8 +42,6 @@ def me(user: models.User = Depends(get_user)) -> Any:
 
 
 @router.get("/{user_id}/items", response_model=Page[Item])
-async def get_public_items(
-    user_id: UUID, session: AsyncSession = Depends(db_session)
-) -> Any:
+async def get_public_items(user_id: UUID, session: AsyncSession = Depends(db_session)) -> Any:
     user = await models.User.objects(session).get_or_404(models.User.id == user_id)
     return await paginate(session, user.get_public_items())

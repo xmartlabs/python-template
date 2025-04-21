@@ -19,8 +19,6 @@ async def db_session() -> AsyncIterator[AsyncSession]:
         await session.close()
 
 
-async def get_user(
-    request: Request, session: AsyncSession = Depends(db_session)
-) -> User:
+async def get_user(request: Request, session: AsyncSession = Depends(db_session)) -> User:
     manager = AuthManager()
     return await manager(request=request, session=session)

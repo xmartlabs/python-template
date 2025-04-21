@@ -22,9 +22,7 @@ async def reset_database() -> AsyncGenerator:
 
 @pytest.fixture
 async def async_client() -> AsyncGenerator:
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as ac:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         yield ac
 
 
