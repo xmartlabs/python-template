@@ -9,7 +9,7 @@ from pydantic import ValidationError
 
 from src.api.v1.schemas import Token, TokenPayload
 from src.core.config import settings
-from src.core.database import Session
+from src.core.database import AsyncSession
 from src.models import User
 
 
@@ -63,7 +63,7 @@ class AuthManager:
             return Token(access_token=token, expires_at=expires)
         return None
 
-    def get_user_from_token(self, token: str, session: Session) -> User:
+    async def get_user_from_token(self, token: str, session: AsyncSession) -> User:
         try:
             payload = jwt.decode(
                 token=token, key=settings.jwt_signing_key, algorithms=self.algorithm
@@ -71,7 +71,7 @@ class AuthManager:
             token_data = TokenPayload(**payload)
         except (JWTError, ValidationError):
             raise self.credentials_exception
-        user = User.objects(session).get(User.id == token_data.user_id)
+        user = await User.objects(session).get(User.id == token_data.user_id)
         if not user:
             raise self.credentials_exception
         return user
@@ -97,6 +97,6 @@ class AuthManager:
             raise self.credentials_exception
         return token
 
-    def __call__(self, request: Request, session: Session) -> User:
+    async def __call__(self, request: Request, session: AsyncSession) -> User:
         token = self._get_token(request)
-        return self.get_user_from_token(token, session)
+        return await self.get_user_from_token(token, session)
