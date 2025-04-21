@@ -9,7 +9,7 @@ from pydantic import ValidationError
 
 from src.api.v1.schemas import Token, TokenPayload
 from src.core.config import settings
-from src.core.database import Session
+from src.core.database import AsyncSession
 from src.models import User
 
 
@@ -38,16 +38,10 @@ class AuthManager:
     accept_header = settings.accept_token
 
     @classmethod
-    def create_access_token(
-        cls, user: User, expires_delta: timedelta | None = None
-    ) -> Tuple[str, datetime]:
-        expires = datetime.now(timezone.utc) + (
-            expires_delta or timedelta(minutes=settings.access_token_expire_minutes)
-        )
+    def create_access_token(cls, user: User, expires_delta: timedelta | None = None) -> Tuple[str, datetime]:
+        expires = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=settings.access_token_expire_minutes))
         claims = {"exp": expires, "user_id": str(user.id)}
-        token = jwt.encode(
-            claims=claims, key=settings.jwt_signing_key, algorithm=cls.algorithm
-        )
+        token = jwt.encode(claims=claims, key=settings.jwt_signing_key, algorithm=cls.algorithm)
         return token, expires
 
     @classmethod
@@ -63,15 +57,13 @@ class AuthManager:
             return Token(access_token=token, expires_at=expires)
         return None
 
-    def get_user_from_token(self, token: str, session: Session) -> User:
+    async def get_user_from_token(self, token: str, session: AsyncSession) -> User:
         try:
-            payload = jwt.decode(
-                token=token, key=settings.jwt_signing_key, algorithms=self.algorithm
-            )
+            payload = jwt.decode(token=token, key=settings.jwt_signing_key, algorithms=self.algorithm)
             token_data = TokenPayload(**payload)
         except (JWTError, ValidationError):
             raise self.credentials_exception
-        user = User.objects(session).get(User.id == token_data.user_id)
+        user = await User.objects(session).get(User.id == token_data.user_id)
         if not user:
             raise self.credentials_exception
         return user
@@ -97,6 +89,6 @@ class AuthManager:
             raise self.credentials_exception
         return token
 
-    def __call__(self, request: Request, session: Session) -> User:
+    async def __call__(self, request: Request, session: AsyncSession) -> User:
         token = self._get_token(request)
-        return self.get_user_from_token(token, session)
+        return await self.get_user_from_token(token, session)

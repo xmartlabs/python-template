@@ -1,0 +1,32 @@
+# See https://pre-commit.com/hooks.html for more hooks
+default_stages: [pre-commit, pre-push]
+files: ^src/|^alembic/versions/
+repos:
+  -   repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v3.2.0
+      hooks:
+      -   id: trailing-whitespace
+      -   id: end-of-file-fixer
+      -   id: check-yaml
+      -   id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.5.5
+    hooks:
+      # Run the linter.
+      - id: ruff
+        args: [ --select=I, --fix ]
+      # Run the formatter.
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: 'v1.8.0'
+    hooks:
+      - id: mypy
+        exclude: ^src/alembic/|^scripts/|^\\.devcontainer/|^\\.github/
+        additional_dependencies: [
+          pydantic==2.10.6,
+          SQLAlchemy==2.0.39,
+          types-mock==5.2.0.20250306
+        ]

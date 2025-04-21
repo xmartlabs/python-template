@@ -21,9 +21,7 @@ celery_worker = Celery(
 celery_worker.autodiscover_tasks(["src.task_queue.task"])
 
 # OpenTelemetry setup
-meter_provider = MeterProvider(
-    metric_readers=[PeriodicExportingMetricReader(otlp_metric_exporter)]
-)
+meter_provider = MeterProvider(metric_readers=[PeriodicExportingMetricReader(otlp_metric_exporter)])
 metrics.set_meter_provider(meter_provider)
 meter = metrics.get_meter("celery_worker")
 
