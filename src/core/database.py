@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, Generic, Sequence, Type, TypeVar
 
 from fastapi import HTTPException
+from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 from sqlalchemy import ExceptionContext, func, select
 from sqlalchemy.event import listens_for
 from sqlalchemy.ext.asyncio import (
@@ -34,6 +35,9 @@ engine: AsyncEngine = create_async_engine(
     pool_recycle=settings.database_pool_recycle,
     max_overflow=settings.database_max_overflow,
 )
+
+# Instrument SQLAlchemy with OpenTelemetry
+SQLAlchemyInstrumentor().instrument()
 
 
 @listens_for(engine.sync_engine, "handle_error")

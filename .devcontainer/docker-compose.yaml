@@ -54,6 +54,11 @@ services:
       - rabbitmq
       - redis
 
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    ports:
+      - "4317:4317"
+
 volumes:
   postgres: {}
   cache: {}

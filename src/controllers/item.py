@@ -4,10 +4,12 @@ from uuid import UUID
 from src import models
 from src.api.v1 import schemas
 from src.core.database import AsyncSession
+from src.core.trace import instrument
 
 
 class ItemController:
     @staticmethod
+    @instrument(name="calling_item_controller_create")
     async def create(item_data: schemas.ItemCreate, owner_id: UUID, session: AsyncSession) -> models.Item:
         item_data = schemas.Item(owner_id=owner_id, **item_data.model_dump())
         item = await models.Item.objects(session).create(item_data.model_dump())
@@ -15,6 +17,7 @@ class ItemController:
         return item
 
     @staticmethod
+    @instrument(name="calling_item_controller_bulk_create")
     async def bulk_create(
         items_data: Sequence[schemas.ItemCreate],
         owner_id: UUID,
