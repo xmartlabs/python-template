@@ -1,30 +1,190 @@
-from pydantic import BaseModel
+import logging.config
+import os
+import sys
+import time
+from enum import StrEnum
+from functools import cache
+from typing import TYPE_CHECKING, Any, Literal
 
-from src.core.config import settings
+import structlog
+from pydantic_settings import BaseSettings
+from structlog import PrintLogger
+
+if TYPE_CHECKING:
+    from structlog.types import EventDict
+    from structlog.typing import Processor
 
 
-class LogConfig(BaseModel):
-    LOGGER_NAME: str = "root"
-    LOG_FORMAT: str = "%(levelprefix)s | %(asctime)s | %(message)s"
-    LOG_LEVEL: str = settings.log_level.value
+class LogLevel(StrEnum):
+    CRITICAL = "CRITICAL"
+    ERROR = "ERROR"
+    WARNING = "WARNING"
+    INFO = "INFO"
+    DEBUG = "DEBUG"
 
-    # Logging config
-    version: int = 1
-    disable_existing_loggers: bool = False
-    formatters: dict = {
-        "default": {
-            "()": "uvicorn.logging.DefaultFormatter",
-            "fmt": LOG_FORMAT,
-            "datefmt": "%Y-%m-%d %H:%M:%S",
+    @property
+    def level(self) -> int:
+        match self:
+            case self.CRITICAL:
+                return logging.CRITICAL
+            case self.ERROR:
+                return logging.ERROR
+            case self.WARNING:
+                return logging.WARNING
+            case self.INFO:
+                return logging.INFO
+            case self.DEBUG:
+                return logging.DEBUG
+            case _:
+                raise ValueError(f"Invalid log level: {self}")
+
+
+class LogSettings(BaseSettings):
+    log_level: LogLevel = LogLevel.INFO
+    structured_log: bool | Literal["auto"] = "auto"
+    cache_loggers: bool = True
+
+    @property
+    def enable_structured_log(self) -> bool:
+        return not sys.stdout.isatty() if self.structured_log == "auto" else self.structured_log
+
+
+class Logger:
+    name: str
+
+    _stderr_logger: PrintLogger
+    _stdout_logger: PrintLogger
+
+    def __init__(self, name: str):
+        self.name = name
+
+        self._stderr_logger = PrintLogger(sys.stderr)
+        self._stdout_logger = PrintLogger(sys.stdout)
+
+    def _print_to_stderr(self, message: str) -> None:
+        self._stderr_logger.msg(message)
+
+    def _print_to_stdout(self, message: str) -> None:
+        self._stdout_logger.msg(message)
+
+    debug = _print_to_stdout
+    info = _print_to_stdout
+    msg = _print_to_stdout
+    warning = _print_to_stdout
+    error = _print_to_stderr
+    exception = _print_to_stderr
+    critical = _print_to_stderr
+
+
+def logger_factory(name: str, *args: Any) -> Logger:
+    """Create a logger instance."""
+    return Logger(name=name or "default")
+
+
+class StreamHandler(logging.Handler):
+    _loggers: dict[str, Logger]
+
+    def __init__(self) -> None:
+        self._loggers = {}
+        super().__init__(logging.DEBUG)
+
+    def _logging_method(self, level: int) -> str | None:
+        if level >= logging.CRITICAL:
+            return "critical"
+        if level >= logging.ERROR:
+            return "error"
+        if level >= logging.WARNING:
+            return "warning"
+        if level >= logging.INFO:
+            return "info"
+        if level >= logging.DEBUG:
+            return "debug"
+
+        return None
+
+    def _logger(self, name: str) -> Logger:
+        if not self._loggers.get(name, None):
+            self._loggers[name] = structlog.get_logger(name)
+
+        return self._loggers[name]
+
+    def emit(self, record: logging.LogRecord) -> None:
+        logging_func = self._logging_method(record.levelno)
+        if not logging_func:
+            return
+
+        logger = self._logger(record.name)
+        getattr(logger, logging_func)(record.getMessage())
+
+
+def default_logging_config(log_level: LogLevel = LogLevel.INFO) -> dict:
+    """Python logging configuration."""
+
+    return {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {},
+        "handlers": {
+            "stream": {
+                "level": log_level.level,
+                "class": "src.logging.StreamHandler",
+            },
+        },
+        "loggers": {
+            "": {"handlers": ["stream"], "level": log_level.level, "propagate": True},
         },
     }
-    handlers: dict = {
-        "default": {
-            "formatter": "default",
-            "class": "logging.StreamHandler",
-            "stream": "ext://sys.stderr",
-        },
-    }
-    loggers: dict = {
-        LOGGER_NAME: {"handlers": ["default"], "level": LOG_LEVEL},
-    }
+
+
+def _timestamp_processor(event_dict: "EventDict", *args: Any, **kwargs: Any) -> "EventDict":
+    """Add timestamp to the event dictionary."""
+    event_dict["timestamp"] = time.time_ns()
+    return event_dict
+
+
+def _pid_processor(event_dict: "EventDict", *args: Any, **kwargs: Any) -> "EventDict":
+    """Add process ID to the event dictionary."""
+    event_dict["pid"] = os.getpid()
+    return event_dict
+
+
+@cache
+def configure_logging(config: LogSettings | None = None) -> None:
+    """Configure logging for the application."""
+    if config is None:
+        config = LogSettings()
+
+    logging.config.dictConfig(default_logging_config(config.log_level))
+
+    processors: list["Processor"] = [
+        structlog.contextvars.merge_contextvars,
+        structlog.stdlib.add_log_level,
+        structlog.stdlib.add_logger_name,
+        structlog.stdlib.PositionalArgumentsFormatter(),
+    ]
+
+    if config.enable_structured_log:
+        processors.extend(
+            [
+                _timestamp_processor,
+                _pid_processor,
+                structlog.processors.dict_tracebacks,
+                structlog.processors.ExceptionRenderer(),
+                structlog.processors.StackInfoRenderer(),
+                structlog.processors.JSONRenderer(),
+            ]
+        )
+    else:
+        processors.extend(
+            [
+                structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M.%S"),
+                structlog.dev.ConsoleRenderer(),
+            ]
+        )
+
+    structlog.configure(
+        processors=processors,
+        logger_factory=logger_factory,
+        wrapper_class=structlog.stdlib.BoundLogger,
+        cache_logger_on_first_use=config.cache_loggers,
+    )

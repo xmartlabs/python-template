@@ -1,10 +1,10 @@
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings
 
 
-class LogLevel(str, Enum):
+class LogLevel(StrEnum):
     critical = "CRITICAL"
     error = "ERROR"
     warning = "WARNING"
@@ -12,7 +12,14 @@ class LogLevel(str, Enum):
     debug = "DEBUG"
 
 
+class Env(StrEnum):
+    dev = "dev"
+
+
 class Settings(BaseSettings):
+    env: str = "dev"
+    project_name: str
+
     # Database
     async_database_url: PostgresDsn
     database_pool_pre_ping: bool
@@ -36,7 +43,6 @@ class Settings(BaseSettings):
 
     # OpenTelemetry
     otel_exporter_otlp_endpoint: str
-    env: str = "dev"
 
 
 settings = Settings()

@@ -10,7 +10,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from src.core.config import settings
 
 # Configure OpenTelemetry
-resource = Resource(attributes={"service.name": settings.env})
+resource = Resource(attributes={"service.name": settings.project_name, "env": settings.env})
 tracer_provider = TracerProvider(resource=resource)
 otlp_exporter = OTLPSpanExporter(endpoint=settings.otel_exporter_otlp_endpoint, insecure=True)
 otlp_metric_exporter = OTLPMetricExporter(endpoint=settings.otel_exporter_otlp_endpoint, insecure=True)
@@ -38,6 +38,3 @@ def instrument(name: str = "request") -> Callable:
         return wrapper
 
     return decorator
-
-
-#
