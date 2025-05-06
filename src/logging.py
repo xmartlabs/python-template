@@ -136,13 +136,13 @@ def default_logging_config(log_level: LogLevel = LogLevel.INFO) -> dict:
     }
 
 
-def _timestamp_processor(event_dict: "EventDict", *args: Any, **kwargs: Any) -> "EventDict":
+def _timestamp_processor(logger: Logger, msg: str, event_dict: "EventDict") -> "EventDict":
     """Add timestamp to the event dictionary."""
     event_dict["timestamp"] = time.time_ns()
     return event_dict
 
 
-def _pid_processor(event_dict: "EventDict", *args: Any, **kwargs: Any) -> "EventDict":
+def _pid_processor(logger: Logger, msg: str, event_dict: "EventDict") -> "EventDict":
     """Add process ID to the event dictionary."""
     event_dict["pid"] = os.getpid()
     return event_dict

@@ -41,15 +41,17 @@ async def login(
 
 @router.get("/me", response_model=schemas.User)
 def me(user: models.User = Depends(get_user)) -> Any:
+    logger = structlog.get_logger(__name__)
+    logger.debug("Getting current user profile")
     return user
 
 
 @router.get("/{user_id}/items", response_model=Page[Item])
 async def get_public_items(user_id: UUID, session: AsyncSession = Depends(db_session)) -> Any:
     # Adding user_id to the context information for loggers
-    with bound_contextvars(user_id=user_id):
+    with bound_contextvars(method="get_public_items"):
         logger = structlog.get_logger(__name__)
-        logger.debug("get_public_items")
+        logger.debug("Getting user public items")
 
         # We can't use the @instrument decorator here because it will collide with the
         # FastAPIinstrumentor and cause the span to be created twice.
