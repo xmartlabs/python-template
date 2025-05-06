@@ -1,8 +1,8 @@
-import logging
 import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, Generic, Sequence, Type, TypeVar
 
+import structlog
 from fastapi import HTTPException
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 from sqlalchemy import ExceptionContext, func, select
@@ -26,6 +26,8 @@ from sqlalchemy.sql import Select
 from src.core.config import settings
 from src.helpers.casing import snakecase
 from src.helpers.sql import random_uuid, utcnow
+
+logger = structlog.get_logger(__name__)
 
 # Async engine and session
 engine: AsyncEngine = create_async_engine(
@@ -54,7 +56,7 @@ def _on_handle_error(context: ExceptionContext) -> None:
     Returns:
         None: this returns nothing.
     """
-    logging.warning(f"handle_error event triggered for PostgreSQL engine: {context.sqlalchemy_exception}")
+    logger.warning(f"handle_error event triggered for PostgreSQL engine: {context.sqlalchemy_exception}")
     if "Can't connect to PostgreSQL server on" in str(context.sqlalchemy_exception):
         # Setting is_disconnect to True should tell SQLAlchemy treat this as a connection error and retry
         context.is_disconnect = True  # type: ignore

@@ -38,6 +38,7 @@ python-jose = "^3.4.0"
 redis = "^5.2.1"
 sqladmin = "^0.20.1"
 sqlalchemy = "^2.0.39"
+structlog = "^25.3.0"
 uvicorn = "^0.34.0"
 
 

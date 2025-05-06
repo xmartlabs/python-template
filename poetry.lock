@@ -2373,6 +2373,24 @@ anyio = ">=3.6.2,<5"
 full = ["httpx (>=0.27.0,<0.29.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.18)", "pyyaml"]
 
 [[package]]
+name = "structlog"
+version = "25.3.0"
+description = "Structured Logging for Python"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "structlog-25.3.0-py3-none-any.whl", hash = "sha256:a341f5524004c158498c3127eecded091eb67d3a611e7a3093deca30db06e172"},
+    {file = "structlog-25.3.0.tar.gz", hash = "sha256:8dab497e6f6ca962abad0c283c46744185e0c9ba900db52a423cb6db99f7abeb"},
+]
+
+[package.extras]
+dev = ["freezegun (>=0.2.8)", "mypy (>=1.4)", "pretend", "pytest (>=6.0)", "pytest-asyncio (>=0.17)", "rich", "simplejson", "twisted"]
+docs = ["cogapp", "furo", "myst-parser", "sphinx", "sphinx-notfound-page", "sphinxcontrib-mermaid", "sphinxext-opengraph", "twisted"]
+tests = ["freezegun (>=0.2.8)", "pretend", "pytest (>=6.0)", "pytest-asyncio (>=0.17)", "simplejson"]
+typing = ["mypy (>=1.4)", "rich", "twisted"]
+
+[[package]]
 name = "tornado"
 version = "6.4.2"
 description = "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed."
@@ -2696,4 +2714,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13.0,<4.0.0"
-content-hash = "a48536026f55f4ea0c3bff006cefd23efa9159c25d797a47cfdcfb4be1d6b117"
+content-hash = "4295a745b43c0f89ad0b7ff0c6676c6eae423c1abcaceabdbd5dca763c545d49"
