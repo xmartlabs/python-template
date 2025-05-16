@@ -12,7 +12,7 @@ from src.logging import configure_logging, default_logging_config
 from src.middlewares import LoggingMiddleware
 from src.urls import router
 
-configure_logging()
+configure_logging(settings.log_settings)
 
 app = FastAPI()
 
@@ -54,5 +54,5 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8000,
         reload=True,
-        log_config=default_logging_config(),
+        log_config=default_logging_config(settings.log_settings.log_level),
     )

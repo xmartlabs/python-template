@@ -49,7 +49,7 @@ def me(user: models.User = Depends(get_user)) -> Any:
 @router.get("/{user_id}/items", response_model=Page[Item])
 async def get_public_items(user_id: UUID, session: AsyncSession = Depends(db_session)) -> Any:
     # Adding user_id to the context information for loggers
-    with bound_contextvars(method="get_public_items"):
+    with bound_contextvars(method_handler="get_public_items"):
         logger = structlog.get_logger(__name__)
         logger.debug("Getting user public items")
 

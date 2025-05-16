@@ -2,51 +2,20 @@ import logging.config
 import os
 import sys
 import time
-from enum import StrEnum
+import typing
 from functools import cache
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any
 
 import structlog
-from pydantic_settings import BaseSettings
+from core.config import LogLevel
 from structlog import PrintLogger
+
+if typing.TYPE_CHECKING:
+    from src.core.config import LogSettings
 
 if TYPE_CHECKING:
     from structlog.types import EventDict
     from structlog.typing import Processor
-
-
-class LogLevel(StrEnum):
-    CRITICAL = "CRITICAL"
-    ERROR = "ERROR"
-    WARNING = "WARNING"
-    INFO = "INFO"
-    DEBUG = "DEBUG"
-
-    @property
-    def level(self) -> int:
-        match self:
-            case self.CRITICAL:
-                return logging.CRITICAL
-            case self.ERROR:
-                return logging.ERROR
-            case self.WARNING:
-                return logging.WARNING
-            case self.INFO:
-                return logging.INFO
-            case self.DEBUG:
-                return logging.DEBUG
-            case _:
-                raise ValueError(f"Invalid log level: {self}")
-
-
-class LogSettings(BaseSettings):
-    log_level: LogLevel = LogLevel.INFO
-    structured_log: bool | Literal["auto"] = "auto"
-    cache_loggers: bool = True
-
-    @property
-    def enable_structured_log(self) -> bool:
-        return not sys.stdout.isatty() if self.structured_log == "auto" else self.structured_log
 
 
 class Logger:
@@ -76,7 +45,7 @@ class Logger:
     critical = _print_to_stderr
 
 
-def logger_factory(name: str, *args: Any) -> Logger:
+def logger_factory(name: str | None, *args: Any) -> Logger:
     """Create a logger instance."""
     return Logger(name=name or "default")
 
@@ -126,12 +95,12 @@ def default_logging_config(log_level: LogLevel = LogLevel.INFO) -> dict:
         "formatters": {},
         "handlers": {
             "stream": {
-                "level": log_level.level,
+                "level": log_level.value,
                 "class": "src.logging.StreamHandler",
             },
         },
         "loggers": {
-            "": {"handlers": ["stream"], "level": log_level.level, "propagate": True},
+            "": {"handlers": ["stream"], "level": log_level.value, "propagate": True},
         },
     }
 
@@ -149,11 +118,8 @@ def _pid_processor(logger: Logger, msg: str, event_dict: "EventDict") -> "EventD
 
 
 @cache
-def configure_logging(config: LogSettings | None = None) -> None:
+def configure_logging(config: "LogSettings") -> None:
     """Configure logging for the application."""
-    if config is None:
-        config = LogSettings()
-
     logging.config.dictConfig(default_logging_config(config.log_level))
 
     processors: list["Processor"] = [
