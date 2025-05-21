@@ -7,8 +7,9 @@ from functools import cache
 from typing import TYPE_CHECKING, Any
 
 import structlog
-from core.config import LogLevel
 from structlog import PrintLogger
+
+from src.core.config import LogLevel
 
 if typing.TYPE_CHECKING:
     from src.core.config import LogSettings
