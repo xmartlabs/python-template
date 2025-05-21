@@ -3,8 +3,8 @@
 ![python version](https://img.shields.io/badge/python-3.13-brightgreen)
 ![fastAPI version](https://img.shields.io/badge/fastapi-0.95.2-brightgreen)
 
-
 ## Components
+
 - Rest API built with FastAPI and SQLAlchemy
 - PostgreSQL database
 
@@ -40,7 +40,6 @@ variable loaded, otherwise the dev container might fail or not work as expected.
 PROJECT_NAME=your-awesome-project code <path/to/repo>
 ```
 
-
 ## Migrations
 
 We use Alembic as database migration tool. You can run migration commands directly inside the dev container or use the provided shortcut in the `exec.sh` script.
@@ -48,14 +47,15 @@ We use Alembic as database migration tool. You can run migration commands direct
 - `migrate` – Runs all migrations.
 - `makemigrations` – Compares the current database state with the table metadata and generates the necessary migration files.
 
-
 ## Code tools
+
 Linters, formatters, etc.
 
 - **ruff**: Linter and formatter
 - **mypy**: Static type checker
 
 ### pre-commit
+
 `pre-commit` is part of the `dev` group in the `pyproject.toml` and is installed by default.
 
 Setup the `pre-commit` hooks, specified in `.pre-commit-config.yaml`:
@@ -77,9 +77,11 @@ There is a shortcut under the `/scripts` directory that runs all this tools for 
 ![Screenshot](.docs/images/format.png)
 
 ## Tests
+
 We use FastAPI's `TestClient` and `pytest` for testing. `./exec.sh test` shortcut can be used to run all tests or just `test` inside the dev container.
 
 ## Shell
+
 You can start an interactive Python shell inside the dev container in two ways:
 
 1. Simply run `shell` inside the container.
@@ -94,6 +96,7 @@ The shell provides some useful pre-imported stuff:
 ![Screenshot](.docs/images/shell.png)
 
 ## Admin
+
 The template includes an admin interface via [SQLAdmin](https://github.com/aminalaee/sqladmin). It's a flexible admin that can be configured in many ways.
 
 *One note: You should be careful when adding relationships to the list or detail pages (specially large many-to-many / one-to-many relationships), because it's not very optimal in terms of DB querys in those cases (all the related objects would be loaded in memory).*
@@ -101,10 +104,59 @@ The template includes an admin interface via [SQLAdmin](https://github.com/amina
 ![Screenshot](.docs/images/admin.png)
 
 ## Celery
+
 The template includes a simple example of distributed tasks using [Celery](https://docs.celeryq.dev/en/stable/). There's an example endpoint which sends a task to the queue and then the celery worker will execute it. You can monitor the worker with [Flower](https://flower.readthedocs.io/en/latest/), to do so first execute `poetry run celery -A src.task_queue.celery_worker flower --loglevel=info` and then go to `localhost:5555`.
 
 In case you want to implement some real-world task you should modify the `src/task_queue/task.py` with your logic and then modify `src/api/v1/routers/task.py`.
 Remember to always add all your tasks modules to the `src/task_queue/celery_worker.py` with `celery_worker.autodiscover_tasks(["path.to.your.task.module"])`.
 
 ## OpenTelemetry
+
 A simple example of OpenTelemetry is included using the native FastAPI instrumentor to collect basic data of requests, also there is a custom instrument to collect data from the controllers. There is a simple implementation to monitor Celery to count the total tasks executed. Given that OpenTelemetry do not have a frontend, to see what is going on you should run `docker logs -f <otel-collector-container-id>`.
+
+## Logging
+
+This project uses [structlog](https://www.structlog.org/en/stable/) for structured logging.
+
+Structured logs make it easier to parse, search, and analyze logs in production systems, especially when using centralized logging tools like Loki, ELK, or Datadog.
+
+### Examples
+
+1. Pass context information as key word arguments
+
+```python
+import structlog
+
+log = structlog.get_logger()
+# Pass extra information as key word arguments to log calls instead of wrapping them into the log message itself
+log.info("user_logged_in", user_id="1234", method="password")
+```
+
+2. Bind additional context information to be used by any logger instance in scope
+
+```python
+import structlog
+from structlog.contextvars import bound_contextvars
+
+async def route_handler(user_id: str, session) -> User:
+    with bound_contextvars(user_id=user_id):
+        logger = structlog.get_logger(__name__)
+        logger.info("Handling request XYZ")  # Will include user_id in the log entry
+
+        user = await fetch_user(user_id, session)
+
+        return user
+
+
+async def fetch_user(user_id: str, session) -> User | None:
+    logger = structlog.get_logger(__name__)
+    log = logger.bind(class_name=User.__class__.name)
+    user = await User.objects(session).get(User.id == user_id)
+
+    if user is None:
+        # This will include class_name and also user_id in the logs, as the logger is created
+        # within the previous method's context.
+        log.debug("Record not found")
+
+    return user
+```

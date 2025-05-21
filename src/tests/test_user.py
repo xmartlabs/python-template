@@ -129,7 +129,6 @@ class TestUser:
         response = await async_client.get(self.ME_URL)
         assert response.status_code == 401
 
-    @patch.object(settings, "access_token_expire_minutes", 0.02)
     async def test_expired_token(self, reset_database: AsyncGenerator, async_client: AsyncClient) -> None:
         await async_client.post(self.SIGNUP_URL, json=self.TEST_PAYLOAD)
         time.sleep(3)

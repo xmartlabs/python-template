@@ -1,3 +1,8 @@
+import os
+
+os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"] = "0.02"
+
+
 import asyncio
 from typing import AsyncGenerator, Generator
 
