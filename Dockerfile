@@ -24,7 +24,7 @@ USER ${USER}
 
 ENV POETRY_HOME="/home/${USER}/.local/share/pypoetry"
 ENV POETRY_NO_INTERACTION=1
-ENV POETRY_VERSION=2.0.1
+ENV POETRY_VERSION=2.1.1
 
 # Poetry is installed in user's home directory, which is not in PATH by default.
 ENV PATH="$PATH:/home/${USER}/.local/bin"
