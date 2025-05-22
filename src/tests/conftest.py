@@ -1,7 +1,6 @@
 import os
 
 # Makes sure we use the test database to run the tests, you may have to create / run migrations on this db
-os.environ["ASYNC_DATABASE_URL"] = "postgresql+asyncpg://dev:dev@postgres:5432/test"
 os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"] = "0.02"
 
 

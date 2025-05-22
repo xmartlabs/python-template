@@ -3,6 +3,7 @@
 set -e
 pwd
 # Ensure test database schema is up-to-date
+
 setup_test_database()
 {
     echo "Setting up test database"
@@ -14,4 +15,4 @@ setup_test_database()
 }
 
 setup_test_database
-poetry run pytest src
+ASYNC_DATABASE_URL=postgresql+asyncpg://dev:dev@postgres:5432/test poetry run pytest src
