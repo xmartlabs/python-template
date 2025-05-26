@@ -42,18 +42,17 @@ jobs:
         env:
           POSTGRES_USER: dev
           POSTGRES_PASSWORD: dev
-          POSTGRES_DB: dev
+          POSTGRES_DB: test
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U dev -d dev"
+          --health-cmd "pg_isready -U dev -d test"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
     env:
       PROJECT_NAME: python-template
-      DATABASE_URL: postgresql://dev:dev@localhost:5432/dev
-      ASYNC_DATABASE_URL: postgresql+asyncpg://dev:dev@localhost:5432/dev
+      ASYNC_DATABASE_URL: postgresql+asyncpg://dev:dev@localhost:5432/test
       DATABASE_POOL_PRE_PING: True
       DATABASE_POOL_SIZE: 5
       DATABASE_POOL_RECYCLE: 3600
