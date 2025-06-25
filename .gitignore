@@ -25,7 +25,7 @@ var/
 .venv
 logs/*
 .ptpython-history
-.mypy_cache
+.pyright_cache
 .pytest_cache
 .coverage
 *.coverage

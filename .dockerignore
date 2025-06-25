@@ -14,7 +14,7 @@ Dockerfile
 docker-compose.yaml
 
 # python related
-.mypy_cache
+.pyright_cache
 .pytest_cache
 *.pyc
 *.pyo

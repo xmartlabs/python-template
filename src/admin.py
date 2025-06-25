@@ -36,6 +36,8 @@ class AdminAuth(AuthenticationBackend):
         token = request.session.get(AdminAuth.cookie_name)
         if not token:
             return failed_auth_response
+
+        session = None
         try:
             async_session = async_session_generator()
             async with async_session() as session:
@@ -44,7 +46,8 @@ class AdminAuth(AuthenticationBackend):
         except Exception:
             return failed_auth_response
         finally:
-            await session.close()
+            if session is not None:
+                await session.close()
         if not user.is_superuser:
             return failed_auth_response
         return True

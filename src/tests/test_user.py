@@ -4,7 +4,6 @@ from typing import AsyncGenerator
 
 from httpx import AsyncClient, Response
 from jose import jwt
-from mock import patch
 
 from src.core.config import settings
 from src.core.security import AuthManager, PasswordManager
