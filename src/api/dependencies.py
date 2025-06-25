@@ -8,15 +8,18 @@ from src.models import User
 
 
 async def db_session() -> AsyncIterator[AsyncSession]:
+    session = None
     try:
         async_session = async_session_generator()
         async with async_session() as session:
             yield session
     except Exception:
-        await session.rollback()
+        if session is not None:
+            await session.rollback()
         raise
     finally:
-        await session.close()
+        if session is not None:
+            await session.close()
 
 
 async def get_user(request: Request, session: AsyncSession = Depends(db_session)) -> User:

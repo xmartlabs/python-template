@@ -1,7 +1,7 @@
 #!/bin/bash
 
-printf "\nRunning mypy...\n"
-poetry run python -m mypy src
+printf "\nRunning pyright...\n"
+pyright src
 
 printf "\nRunning ruff check...\n"
 ruff check --fix

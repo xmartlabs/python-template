@@ -28,7 +28,8 @@
       "extensions": [
         "charliermarsh.ruff",
         "ms-azuretools.vscode-docker",
-        "ms-python.mypy-type-checker",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
         "tamasfe.even-better-toml"
       ],
       "settings": {
@@ -48,7 +49,9 @@
         "python.testing.pytestArgs": [
           "src/tests"
         ],
-        "python.testing.pytestEnabled": true
+        "python.testing.pytestEnabled": true,
+        "python.analysis.typeCheckingMode": "standard",
+        "python.analysis.autoImportCompletions": true
       }
     },
     "black-formatter.args": [

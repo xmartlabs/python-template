@@ -25,15 +25,18 @@ def async_session_generator() -> async_sessionmaker[AsyncSession]:
 
 
 async def override_get_db() -> AsyncIterator[AsyncSession]:
+    session = None
     try:
         async_session = async_session_generator()
         async with async_session() as session:
             yield session
     except Exception:
-        await session.rollback()
+        if session is not None:
+            await session.rollback()
         raise
     finally:
-        await session.close()
+        if session is not None:
+            await session.close()
 
 
 app.dependency_overrides[db_session] = override_get_db

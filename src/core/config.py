@@ -27,6 +27,10 @@ class LogSettings(BaseSettings):
     structured_log: bool | Literal["auto"] = "auto"
     cache_loggers: bool = True
 
+    def __hash__(self) -> int:
+        """Make LogSettings hashable so it can be used as a dict key"""
+        return hash((self.log_level, self.structured_log, self.cache_loggers))
+
     @property
     def enable_structured_log(self) -> bool:
         return not sys.stdout.isatty() if self.structured_log == "auto" else self.structured_log
@@ -42,7 +46,7 @@ class LogSettings(BaseSettings):
 
 class Settings(BaseSettings):
     # Makes the settings immutable and hashable (can be used as dicts key)
-    model_config = SettingsConfigDict(frozen=True)
+    model_config = SettingsConfigDict(frozen=True, env_file=".env", env_file_encoding="utf-8")
 
     env: str = "dev"
     project_name: str
@@ -72,4 +76,18 @@ class Settings(BaseSettings):
     otel_exporter_otlp_endpoint: str
 
 
-settings = Settings()
+# Settings will be instantiated from environment variables
+# Make sure to set these environment variables:
+# PROJECT_NAME=python-template
+# ASYNC_DATABASE_URL=postgresql+asyncpg://user:password@localhost/db
+# DATABASE_POOL_PRE_PING=true
+# DATABASE_POOL_SIZE=10
+# DATABASE_POOL_RECYCLE=3600
+# DATABASE_MAX_OVERFLOW=20
+# SERVER_URL=http://localhost:8000
+# ACCESS_TOKEN_EXPIRE_MINUTES=60.0
+# JWT_SIGNING_KEY=your-secret-key-here
+# CELERY_BROKER_URL=redis://localhost:6379/0
+# CELERY_RESULT_BACKEND=redis://localhost:6379/0
+# OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
+settings = Settings()  # type: ignore[reportCallIssue]

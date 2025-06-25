@@ -20,13 +20,8 @@ repos:
       # Run the formatter.
       - id: ruff-format
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: 'v1.8.0'
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.394
     hooks:
-      - id: mypy
+      - id: pyright
         exclude: ^src/alembic/|^scripts/|^\\.devcontainer/|^\\.github/
-        additional_dependencies: [
-          pydantic==2.10.6,
-          SQLAlchemy==2.0.39,
-          types-mock==5.2.0.20250306
-        ]
