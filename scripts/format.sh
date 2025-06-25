@@ -1,7 +1,7 @@
 #!/bin/bash
 
 printf "\nRunning pyright...\n"
-pyright src
+poetry run pyright src
 
 printf "\nRunning ruff check...\n"
 ruff check --fix
