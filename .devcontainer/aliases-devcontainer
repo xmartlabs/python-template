@@ -1,5 +1,5 @@
 alias format='scripts/format.sh'
 alias makemigrations='scripts/makemigrations.sh'
 alias migrate='scripts/migrate.sh'
-alias shell='poetry run python src/helpers/shell.py'
+alias shell='uv run python src/helpers/shell.py'
 alias test='scripts/test.sh'

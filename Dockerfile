@@ -22,23 +22,19 @@ RUN groupadd -g 10001 ${USER} \
 
 USER ${USER}
 
-ENV POETRY_HOME="/home/${USER}/.local/share/pypoetry"
-ENV POETRY_NO_INTERACTION=1
-ENV POETRY_VERSION=2.1.1
+ENV UV_VERSION=0.7.18
 
-# Poetry is installed in user's home directory, which is not in PATH by default.
+# uv is installed in user's home directory, which is not in PATH by default.
 ENV PATH="$PATH:/home/${USER}/.local/bin"
 ENV PYTHONPATH=/opt/app/${PROJECT_NAME}
 
 RUN pip install --upgrade pip \
-    && pip install --user poetry==${POETRY_VERSION}
+    && pip install --user uv==${UV_VERSION}
 
 WORKDIR /opt/app/${PROJECT_NAME}
 COPY --chown=${USER}:${USER} . .
 
-RUN poetry install --no-root --without dev \
-    # clean up installation caches and artifacts
-    && yes | poetry cache clear . --all
+RUN uv sync --frozen --no-cache --no-install-project --no-default-groups
 
 
 # ----
@@ -64,7 +60,7 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER ${USER}
 
 RUN mkdir -p /home/${USER}/.cache
-RUN poetry install --no-root --all-groups
+RUN uv sync --frozen --no-cache --no-install-project --all-groups
 
 CMD ["sleep", "infinity"]
 
@@ -72,14 +68,13 @@ CMD ["sleep", "infinity"]
 # Celery worker stage
 FROM base AS celery_worker
 
-CMD ["poetry", "run", "celery", "-A", "src.task_queue.celery_worker", "worker", "--loglevel=info"]
+CMD ["uv", "run", "celery", "-A", "src.task_queue.celery_worker", "worker", "--loglevel=info"]
 
 # ----
 # Builder will package the app for deployment
 FROM base AS builder
 
-RUN poetry check \
-    && poetry build --format wheel
+RUN uv build --wheel
 
 # ----
 # Deployment stage to run in cloud environments. This must be the last stage, which is used to run the application by default
@@ -96,10 +91,10 @@ USER ${USER}
 # TODO(remer): wheel version has to match what is set in pyproject.toml
 COPY --from=builder /opt/app/${PROJECT_NAME}/dist/python_template-0.1.0-py3-none-any.whl /opt/app/${PROJECT_NAME}/dist/python_template-0.1.0-py3-none-any.whl
 
-RUN poetry run pip install --no-deps dist/python_template-0.1.0-py3-none-any.whl
+RUN uv run pip install --no-deps dist/python_template-0.1.0-py3-none-any.whl
 
 EXPOSE 8000
 
-ENTRYPOINT ["poetry", "run", "python", "-m", "uvicorn", "src.main:app"]
+ENTRYPOINT ["uv", "run", "python", "-m", "uvicorn", "src.main:app"]
 
 CMD ["--host", "0.0.0.0", "--port", "8000"]

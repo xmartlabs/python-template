@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd src
-poetry run alembic revision --autogenerate
+uv run alembic revision --autogenerate
