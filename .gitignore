@@ -25,10 +25,11 @@ var/
 .venv
 logs/*
 .ptpython-history
-.mypy_cache
+.pyright_cache
 .pytest_cache
 .coverage
 *.coverage
+.python-version
 
 .devcontainer/commandhistory
 !.devcontainer/commandhistory/.gitkeep

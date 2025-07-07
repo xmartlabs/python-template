@@ -52,7 +52,7 @@ We use Alembic as database migration tool. You can run migration commands direct
 Linters, formatters, etc.
 
 - **ruff**: Linter and formatter
-- **mypy**: Static type checker
+- **pyright**: Static type checker
 
 ### pre-commit
 

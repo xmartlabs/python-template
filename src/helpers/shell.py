@@ -1,3 +1,4 @@
+import asyncio
 import inspect
 from typing import Dict, Type
 
@@ -5,7 +6,7 @@ from ptpython.repl import embed
 
 from src import models
 from src.core.config import settings
-from src.core.database import SessionLocal, SQLBase
+from src.core.database import SQLBase, async_session_generator
 
 
 def _get_models() -> Dict[str, Type[SQLBase]]:
@@ -16,11 +17,25 @@ def _get_models() -> Dict[str, Type[SQLBase]]:
     return models_dict
 
 
-def _start_shell() -> None:
+async def _start_shell_async() -> None:
+    """Async shell function that properly handles the async session"""
     models = _get_models()
-    with SessionLocal() as session:
+    async_session = async_session_generator()
+    async with async_session() as session:
         locals = {"session": session, "settings": settings, **models}
         embed(locals=locals, history_filename=".ptpython-history")
+
+
+def _start_shell() -> None:
+    """Start the shell - wrapper to handle async context"""
+    try:
+        # Try to use existing event loop if available
+        asyncio.get_running_loop()
+        # If we're already in an async context, we can't use asyncio.run
+        asyncio.create_task(_start_shell_async())
+    except RuntimeError:
+        # No event loop running, start new one
+        asyncio.run(_start_shell_async())
 
 
 if __name__ == "__main__":
