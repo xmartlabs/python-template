@@ -4,7 +4,7 @@ printf "\nRunning pyright...\n"
 poetry run pyright src
 
 printf "\nRunning ruff check...\n"
-ruff check --fix
+poetry run ruff check --fix
 
 printf "\nRunning ruff format...\n"
-ruff format
+poetry run ruff format

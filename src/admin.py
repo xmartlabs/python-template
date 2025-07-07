@@ -53,7 +53,8 @@ class AdminAuth(AuthenticationBackend):
         return True
 
 
-class UserAdmin(ModelView, model=User):
+class UserAdmin(ModelView):
+    model = User
     column_list = [
         User.email,
         User.created_at,
@@ -62,7 +63,8 @@ class UserAdmin(ModelView, model=User):
     column_searchable_list = [User.id, User.email]
 
 
-class ItemAdmin(ModelView, model=Item):
+class ItemAdmin(ModelView):
+    model = Item
     column_list = [
         Item.name,
         Item.description,
