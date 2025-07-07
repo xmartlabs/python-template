@@ -23,8 +23,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install poetry
-          poetry install --no-root --with dev
+          pip install uv
+          uv sync --frozen --no-cache --no-install-project --all-groups
 
       - name: Install pre-commit
         run: pip install pre-commit
@@ -75,13 +75,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install poetry
-          poetry install --no-root --with dev
+          pip install uv
+          uv sync --frozen --no-cache --no-install-project --group dev --no-group types
 
       - name: Run tests with coverage
         run: |
-          poetry run coverage run -m pytest
-          poetry run coverage report -m --fail-under=80
+          uv run coverage run -m pytest
+          uv run coverage report -m --fail-under=80
 
   docker-build:
     name: Build Docker Image

@@ -29,6 +29,7 @@ logs/*
 .pytest_cache
 .coverage
 *.coverage
+.python-version
 
 .devcontainer/commandhistory
 !.devcontainer/commandhistory/.gitkeep
