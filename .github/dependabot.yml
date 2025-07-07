@@ -2,8 +2,8 @@
 version: 2
 
 updates:
-  # Enable version updates for poetry
-  - package-ecosystem: "pip"
+  # Enable version updates for uv
+  - package-ecosystem: "uv"
     commit-message:
       include: "scope"
       prefix: "chore"
@@ -14,8 +14,6 @@ updates:
       - xmartlabs/python
     schedule:
       interval: "weekly"
-    # dependabot doesn't support poetry v2. See: https://github.com/dependabot/dependabot-core/issues/11237
-    open-pull-requests-limit: 0
 
   # Enable version updates for Docker
   - package-ecosystem: "docker"

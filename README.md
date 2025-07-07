@@ -18,12 +18,12 @@ You can connect to the container once it's running using `scripts/exec.sh bash` 
 
 Once the containers and server are running, you can go to `http://localhost:8000/docs` to see the automatic interactive API documentation.
 
-In case you don't to use VS Code and dev containers, or you want to set up the environment in a different way. You can use the `Dockerfile` in the root of the repository to create the image with everything needed to run the project. The `docker-compose.yaml` and `.env.example` files in the `.devcontainer` folder serve as references for recreating other services like the database. Also, you will need to run the `poetry install --no-ansi --no-root` command manually to install all the required dependencies.
+In case you don't to use VS Code and dev containers, or you want to set up the environment in a different way. You can use the `Dockerfile` in the root of the repository to create the image with everything needed to run the project. The `docker-compose.yaml` and `.env.example` files in the `.devcontainer` folder serve as references for recreating other services like the database. Also, you will need to run the `uv sync --frozen --no-cache --no-install-project --all-groups` command manually to install all the required dependencies.
 
 Alternatively, you must have:
 
 - `Python >3.13`
-- [Poetry](https://python-poetry.org/docs/#installation) (don't forget to install the dependencies from the lock file)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) (don't forget to install the dependencies from the lock file)
 - [PostgreSQL](https://www.postgresql.org/) database, setting the corresponding environment variables for the database connection.
 
 For making code changes, installing `pre-commit` is necessary (see section [Code tools: pre-commit](#pre-commit))
@@ -105,7 +105,7 @@ The template includes an admin interface via [SQLAdmin](https://github.com/amina
 
 ## Celery
 
-The template includes a simple example of distributed tasks using [Celery](https://docs.celeryq.dev/en/stable/). There's an example endpoint which sends a task to the queue and then the celery worker will execute it. You can monitor the worker with [Flower](https://flower.readthedocs.io/en/latest/), to do so first execute `poetry run celery -A src.task_queue.celery_worker flower --loglevel=info` and then go to `localhost:5555`.
+The template includes a simple example of distributed tasks using [Celery](https://docs.celeryq.dev/en/stable/). There's an example endpoint which sends a task to the queue and then the celery worker will execute it. You can monitor the worker with [Flower](https://flower.readthedocs.io/en/latest/), to do so first execute `uv run celery -A src.task_queue.celery_worker flower --loglevel=info` and then go to `localhost:5555`.
 
 In case you want to implement some real-world task you should modify the `src/task_queue/task.py` with your logic and then modify `src/api/v1/routers/task.py`.
 Remember to always add all your tasks modules to the `src/task_queue/celery_worker.py` with `celery_worker.autodiscover_tasks(["path.to.your.task.module"])`.

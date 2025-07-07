@@ -18,4 +18,4 @@ setup_test_database()
 }
 
 setup_test_database
-ASYNC_DATABASE_URL=postgresql+asyncpg://$TEST_DB_CONN_STRING/$TEST_DB_NAME poetry run pytest src
+ASYNC_DATABASE_URL=postgresql+asyncpg://$TEST_DB_CONN_STRING/$TEST_DB_NAME uv run pytest src
