@@ -14,11 +14,11 @@ router = APIRouter()
 # you have to implement the task logic in the src/task_queue/task.py file
 @router.post("/add", response_model=Task)
 def add_task(payload: TaskCreate = Body(...)) -> Any:
-    task = add.delay(payload.delay, payload.x, payload.y)
+    task = add.delay(payload.delay, payload.x, payload.y)  # type: ignore[reportFunctionMemberAccess]
     return {"task_id": task.id}
 
 
 @router.get("/task/{task_id}", response_model=TaskResult)
 def get_task_result(task_id: str = Path(...)) -> Any:
-    task: AsyncResult = add.AsyncResult(task_id)
+    task: AsyncResult = add.AsyncResult(task_id)  # type: ignore[reportFunctionMemberAccess]
     return {"task_id": task.id, "task_status": task.status, "task_result": task.result}
