@@ -7,11 +7,13 @@ ARG USER=appuser
 
 ENV RUNTIME_PACKAGES=libpq-dev
 # These packages will be deleted from the final image, after the application is packaged
-ENV BUILD_PACKAGES=gcc
+ENV BUILD_PACKAGES="gcc build-essential python3-dev"
 
 RUN apt-get update \
-    && apt-get install -y ${BUILD_PACKAGES} ${RUNTIME_PACKAGES} \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y --no-install-recommends ${BUILD_PACKAGES} ${RUNTIME_PACKAGES} \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* /var/tmp/*
 
 RUN mkdir -p /opt/app/${PROJECT_NAME}
 
@@ -32,10 +34,13 @@ RUN pip install --upgrade pip \
     && pip install --user uv==${UV_VERSION}
 
 WORKDIR /opt/app/${PROJECT_NAME}
-COPY --chown=${USER}:${USER} . .
 
+# Instead of copying everything first, copy dependency files first
+COPY --chown=${USER}:${USER} pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-cache --no-install-project --no-default-groups
 
+# Then copy the rest of the application
+COPY --chown=${USER}:${USER} . .
 
 # ----
 # Devcontainer adds extra tools for development
