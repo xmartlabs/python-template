@@ -35,7 +35,8 @@ RUN pip install --upgrade pip \
 
 WORKDIR /opt/app/${PROJECT_NAME}
 
-# Instead of copying everything first, copy dependency files first
+# Only copy files needed to install dependencies so it can be cached 
+# (changes to source files won't invalidate cache at this point)
 COPY --chown=${USER}:${USER} pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-cache --no-install-project --no-default-groups
 
