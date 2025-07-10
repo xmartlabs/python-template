@@ -7,11 +7,13 @@ ARG USER=appuser
 
 ENV RUNTIME_PACKAGES=libpq-dev
 # These packages will be deleted from the final image, after the application is packaged
-ENV BUILD_PACKAGES=gcc
+ENV BUILD_PACKAGES="gcc build-essential python3-dev"
 
 RUN apt-get update \
-    && apt-get install -y ${BUILD_PACKAGES} ${RUNTIME_PACKAGES} \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y --no-install-recommends ${BUILD_PACKAGES} ${RUNTIME_PACKAGES} \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* /var/tmp/*
 
 RUN mkdir -p /opt/app/${PROJECT_NAME}
 
@@ -32,15 +34,20 @@ RUN pip install --upgrade pip \
     && pip install --user uv==${UV_VERSION}
 
 WORKDIR /opt/app/${PROJECT_NAME}
-COPY --chown=${USER}:${USER} . .
 
+# Only copy files needed to install dependencies so it can be cached 
+# (changes to source files won't invalidate cache at this point)
+COPY --chown=${USER}:${USER} pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-cache --no-install-project --no-default-groups
 
+# Then copy the rest of the application
+COPY --chown=${USER}:${USER} . .
 
 # ----
 # Devcontainer adds extra tools for development
 FROM base AS devcontainer
 
+ARG USER=appuser
 USER root
 
 # Add any other tool usefull during development to the following list, this won't be included
@@ -79,6 +86,8 @@ RUN uv build --wheel
 # ----
 # Deployment stage to run in cloud environments. This must be the last stage, which is used to run the application by default
 FROM base AS deployment
+
+ARG PROJECT_NAME=python-template
 
 # root is needed to remove build dependencies
 USER root
