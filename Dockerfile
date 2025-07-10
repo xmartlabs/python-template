@@ -46,6 +46,7 @@ COPY --chown=${USER}:${USER} . .
 # Devcontainer adds extra tools for development
 FROM base AS devcontainer
 
+ARG USER=appuser
 USER root
 
 # Add any other tool usefull during development to the following list, this won't be included
@@ -84,6 +85,8 @@ RUN uv build --wheel
 # ----
 # Deployment stage to run in cloud environments. This must be the last stage, which is used to run the application by default
 FROM base AS deployment
+
+ARG PROJECT_NAME=python-template
 
 # root is needed to remove build dependencies
 USER root
