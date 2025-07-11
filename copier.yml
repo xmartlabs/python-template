@@ -17,9 +17,11 @@ _exclude:
   - .venv
   - .pyproject.toml
   - README.md
+  - .copier-answers.yml
 
 
 
 _answers_file: .copier/.copier-answers.yml
+
 _tasks:
   - ["{{ _copier_python }}", .copier/update_dotenv.py]
