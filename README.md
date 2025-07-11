@@ -8,6 +8,16 @@
 - Rest API built with FastAPI and SQLAlchemy
 - PostgreSQL database
 
+## Clone the project using Copier
+
+Decide a name for your new project's directory, you will use it below. For example, `my-awesome-project`.
+
+Go to the directory that will be the parent of your project, and run the command with your project's name:
+
+`copier copy --vcs-ref main git@github.com:xmartlabs/python-template.git my-awesome-project --trust`
+
+Note the `--trust` option is necessary to be able to execute a post-creation script that updates your `.env` files.
+
 ## Project setup
 
 The only things you need are [Docker](https://docs.docker.com/engine/install/), [Docker Compose](https://docs.docker.com/compose/install/), and a code editor with devcontainer support like [Visual Studio Code](https://code.visualstudio.com/download). Once you open the template with VS Code, it will recommend that you install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) if you don’t have it already. Then, a pop-up will appear to reopen the template in the devcontainer, or you can use `Ctrl / Cmd + shift + P` -> `Dev Containers: Open Folder in Container…`. Remember to add the `.env` file at the root folder; you can use `.env.example` as a reference.
@@ -27,18 +37,6 @@ Alternatively, you must have:
 - [PostgreSQL](https://www.postgresql.org/) database, setting the corresponding environment variables for the database connection.
 
 For making code changes, installing `pre-commit` is necessary (see section [Code tools: pre-commit](#pre-commit))
-
-### Customization
-
-The project's name (`python-template`) can be edited following next steps:
-
-1. Edit project's name in the [pyproject.toml](pyproject.toml) file
-2. Set `PROJECT_NAME` env variable to be exactly the same as project's name in pyproject.toml. Ensure VSCode has this
-variable loaded, otherwise the dev container might fail or not work as expected. You can open VScode with from cmd with:
-
-```bash
-PROJECT_NAME=your-awesome-project code <path/to/repo>
-```
 
 ## Migrations
 
