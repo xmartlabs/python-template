@@ -1,6 +1,6 @@
 project_name:
   type: str
-  help: The name of the project, shown to API users (in .env)
+  help: The name of the project
   default: python-template
 
 _exclude:
@@ -17,8 +17,6 @@ _exclude:
   - .venv
   - .pyproject.toml
   - README.md
-  - .copier-answers.yml
-
 
 
 _answers_file: .copier/.copier-answers.yml
