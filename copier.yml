@@ -4,19 +4,12 @@ project_name:
   default: python-template
 
 _exclude:
-# Global
-  - .github
-  - .vscode
-  - .mypy_cache
   # Python
   - __pycache__
   - .mypy_cache
   - .cache
-  - .docs
-  - .devcontainer
   - .venv
-  - .pyproject.toml
-  - README.md
+  - uv.lock
 
 
 _answers_file: .copier/.copier-answers.yml
