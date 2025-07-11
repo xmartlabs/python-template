@@ -1,0 +1,25 @@
+project_name:
+  type: str
+  help: The name of the project, shown to API users (in .env)
+  default: python-template
+
+_exclude:
+# Global
+  - .github
+  - .vscode
+  - .mypy_cache
+  # Python
+  - __pycache__
+  - .mypy_cache
+  - .cache
+  - .docs
+  - .devcontainer
+  - .venv
+  - .pyproject.toml
+  - README.md
+
+
+
+_answers_file: .copier/.copier-answers.yml
+_tasks:
+  - ["{{ _copier_python }}", .copier/update_dotenv.py]
