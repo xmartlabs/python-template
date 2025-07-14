@@ -34,6 +34,7 @@ RUN pip install --upgrade pip \
 WORKDIR /opt/app/${PROJECT_NAME}
 COPY --chown=${USER}:${USER} . .
 
+RUN uv lock
 RUN uv sync --frozen --no-cache --no-install-project --no-default-groups
 
 

@@ -4,4 +4,5 @@
 
 set -xeo pipefail
 
+uv lock
 uv sync --frozen --no-install-project --all-groups
