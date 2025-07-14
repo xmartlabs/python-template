@@ -14,7 +14,6 @@ _exclude:
   - .mypy_cache
   - .cache
   - .venv
-  - uv.lock
 
 
 _answers_file: .copier/.copier-answers.yml
