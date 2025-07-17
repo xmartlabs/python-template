@@ -25,7 +25,7 @@ jobs:
         run: pip install copier
 
       - name: Generate project from template
-        run: copier copy . generated --defaults --force
+        run: copier copy . generated --trust
 
       - name: Install dependencies
         working-directory: generated
@@ -87,7 +87,7 @@ jobs:
         run: pip install copier
 
       - name: Generate project from template
-        run: copier copy . generated --defaults --force
+        run: copier copy . generated --trust
 
       - name: Install dependencies
         working-directory: generated
@@ -113,7 +113,7 @@ jobs:
         run: pip install copier
 
       - name: Generate project from template
-        run: copier copy . generated --defaults --force
+        run: copier copy . generated --trust
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
