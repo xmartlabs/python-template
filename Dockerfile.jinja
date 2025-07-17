@@ -91,7 +91,7 @@ USER ${USER}
 
 # TODO(remer): wheel version has to match what is set in pyproject.toml
 # Note: Python wheel names convert hyphens to underscores
-COPY --from=builder /opt/app/${PROJECT_NAME}/dist/ dist/
+COPY --from=builder /opt/app/${PROJECT_NAME}/dist/*.whl /opt/app/${PROJECT_NAME}/dist/
 
 RUN uv run pip install --no-deps dist/*.whl
 
