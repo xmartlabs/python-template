@@ -90,9 +90,9 @@ RUN apt-get purge -y ${BUILD_PACKAGES} \
 USER ${USER}
 
 # TODO(remer): wheel version has to match what is set in pyproject.toml
-COPY --from=builder /opt/app/${PROJECT_NAME}/dist/${PROJECT_NAME}-0.1.0-py3-none-any.whl /opt/app/${PROJECT_NAME}/dist/${PROJECT_NAME}-0.1.0-py3-none-any.whl
+COPY --from=builder /opt/app/${PROJECT_NAME}/dist/${PROJECT_NAME}-0.0.1-py3-none-any.whl /opt/app/${PROJECT_NAME}/dist/${PROJECT_NAME}-0.0.1-py3-none-any.whl
 
-RUN uv run pip install --no-deps dist/${PROJECT_NAME}-0.1.0-py3-none-any.whl
+RUN uv run pip install --no-deps dist/${PROJECT_NAME}-0.0.1-py3-none-any.whl
 
 EXPOSE 8000
 
