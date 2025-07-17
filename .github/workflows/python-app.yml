@@ -31,7 +31,7 @@ jobs:
         working-directory: generated
         run: |
           pip install uv
-          uv sync --frozen --no-cache --no-install-project --all-groups
+          uv sync --no-cache --no-install-project --all-groups
 
       - name: Install pre-commit
         working-directory: generated
@@ -93,7 +93,7 @@ jobs:
         working-directory: generated
         run: |
           pip install uv
-          uv sync --frozen --no-cache --no-install-project --group dev --no-group types
+          uv sync --no-cache --no-install-project --group dev --no-group types
 
       - name: Run tests with coverage
         working-directory: generated
