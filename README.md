@@ -30,7 +30,7 @@ For making code changes, installing `pre-commit` is necessary (see section [Code
 
 ### Customization
 
-The project's name (`python-template`), you need to run `uv run python scripts/rename-template.py <new-project-name>`
+To rename the project `python-template`, you need to run `uv run python scripts/rename-template.py <new-project-name>`
 
 ```bash
 PROJECT_NAME=your-awesome-project code <path/to/repo>
