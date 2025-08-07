@@ -15,7 +15,7 @@ paths_to_replace = [
     ".github/workflows/python-app.yml",
     "scripts/**/*",
     "scripts/**/*",
-
+    ".env"
 ]
 
 def rename_template(new_project_name: str):
