@@ -1,4 +1,3 @@
-# in all files under src, replace the string "mi-proyecto" with the name of the project, coming from params.
 
 import argparse
 import glob
@@ -19,7 +18,6 @@ paths_to_replace = [
 ]
 
 def rename_template(new_project_name: str):
-    # get all files, ecl
     for path in paths_to_replace:
         files = glob.glob(path, recursive=True)
         for file in files:
