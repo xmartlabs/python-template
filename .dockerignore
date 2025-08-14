@@ -1,21 +1,81 @@
-# repo and project folders
-.devcontainer
-.docs
+# Version control
 .git
-.github
 .gitignore
-.gitmodules
-.idea
-.vscode
+.gitattributes
 
-# docker
-Dockerfile
-.dockerignore
-docker-compose.yaml
+# Development containers
+.devcontainer/
+.vscode/
 
-# python related
-.pyright_cache
-.pytest_cache
+# Documentation
+docs/
+*.txt
+
+# Python cache and temporary files
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
+.Python
+.pytest_cache/
+.coverage
+.coverage.*
+.cache
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+dmypy.json
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Scripts (if not needed in container)
+scripts/
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# Test artifacts
+.tox/
+.nox/
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
