@@ -1,0 +1,56 @@
+---
+description: Enforce structured and absolute import order for Python files
+globs:
+  - "**/*.py"
+alwaysApply: true
+---
+
+Group, order, and format Python imports following these conventions:
+
+### ✅ Use **absolute imports only**:
+Always write imports using the full path from the project root.
+**Avoid** relative imports like `from .module import foo` or `from ..utils import bar`.
+
+- ✅ `from my_project.utils import foo`  
+- ❌ `from .utils import foo`  
+- ❌ `from ..submodule import bar`
+
+This ensures clarity, consistency across refactors, and better compatibility with tools like linters, IDEs, and packaging systems.
+
+---
+
+### 📚 Import grouping and ordering:
+
+Organize imports into **three groups**, separated by a blank line:
+
+1. **Standard Library Imports**  
+   e.g., `import os`, `from datetime import datetime`
+
+2. **Third-Party Library Imports**  
+   e.g., `import numpy as np`, `from sqlalchemy import Column`
+
+3. **Local Application/Library Imports**  
+   e.g., `from my_project.utils import helper_function`
+
+---
+
+### 🔤 Within each group:
+
+- First: `import module` (in alphabetical order)
+- Then: `from module import name` (in alphabetical order)
+
+---
+
+### ✅ Example:
+
+```python
+import os
+import sys
+from datetime import datetime
+
+import numpy as np
+import pandas as pd
+from sqlalchemy import Column, Integer
+
+import my_project
+from my_project.utils import helper_function
