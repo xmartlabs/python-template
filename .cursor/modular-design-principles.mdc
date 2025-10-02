@@ -1,0 +1,19 @@
+---
+description: Enforce modular design with clear responsibility boundaries
+alwaysApply: true
+---
+
+- Follow **Single Responsibility Principle (SRP)**: one reason to change per module/class/function.
+- Avoid **over-engineering**: modularize only when it improves clarity, reuse or testability.
+- Group related logic in packages: `data/`, `services/`, `utils/`, `models/`, etc.
+- Keep modules cohesive but not overly fragmented.
+- Don't split code into separate files unless they evolve independently or have distinct lifecycles.
+
+**Checklist for evaluating modularity:**
+- Can the module be reused independently?
+- Does it hide internal details behind a clean interface?
+- Would adding more features bloat its logic?
+
+Example:
+✅ `email_service.py` sends emails  
+🚫 `email_sender.py`, `email_templates.py`, `email_config.py` if too small and tightly coupled

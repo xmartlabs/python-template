@@ -1,0 +1,23 @@
+---
+description: Logging should be actionable, structured, and follow professional practices
+alwaysApply: true
+---
+
+- Never log and raise at the same time. Let logs occur where the exception is handled.
+- Use `.bind()` to attach contextual fields like `job_id`, `trainer`, `dataset`, etc.
+- Propagate the bound logger across modules instead of re-creating it.
+- Use semantic log levels:
+  - `debug`: Diagnostic/internal details, not printed in prod
+  - `info`: Expected events (training started, dataset loaded, etc.)
+  - `warning`: Unexpected but handled (e.g. missing columns)
+  - `error`: Real failures that may abort a process
+- Avoid logs like `"Starting function"` — instead log **what happened**, with context.
+- Avoid excessive logging in loops. Log summary or batch progress only.
+- Enable JSON structured logs only in production environments.
+- Keep logs relevant to external observability, not internal dev experimentation.
+
+**Checklist for evaluating a log:**
+- Does it convey a real event, not just function entry?
+- Is it at the correct level (not everything is warning)?
+- Is the logger properly bound with job/task context?
+- Can this log help diagnose or monitor the system?

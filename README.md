@@ -116,6 +116,11 @@ This project uses [structlog](https://www.structlog.org/en/stable/) for structur
 
 Structured logs make it easier to parse, search, and analyze logs in production systems, especially when using centralized logging tools like Loki, ELK, or Datadog.
 
+## IDE
+
+This project has some [cursor|https://cursor.com/] rules under `.cursor` that help us write some code, but you are not forced to use it as this is optional.
+
+
 ### Examples
 
 1. Pass context information as key word arguments

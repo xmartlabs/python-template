@@ -1,0 +1,28 @@
+---
+description: Enforce strict type annotations using Python 3.12+ standards
+globs:
+  - "**/*.py"
+alwaysApply: true
+---
+
+- Always annotate:
+  - Function parameters and return types, even for `None`, `bool`, `str`, etc.
+  - Variable declarations (including attributes and loop vars) when static typing helps comprehension.
+  - Lambda expressions when assigned or passed as arguments.
+- **Avoid** `Any`, `Optional`, `Union`, `List`, `Dict`, etc. unless justified.
+- **Prefer** Python 3.12+ standard generics:
+  - Use `list[str]`, `dict[str, int]`, `tuple[str, int]`
+  - Avoid `List`, `Dict`, `Tuple` from `typing`
+- Use `|` (pipe) syntax for unions:
+  - Use `str | None`
+  - Avoid `Optional[str]`
+- Use `Self` and `classmethod`/`staticmethod` hints as per [PEP 673](https://peps.python.org/pep-0673/)
+
+**Examples:**
+
+```python
+def greet(name: str | None = None) -> str:
+    return f"Hello, {name or 'World'}"
+
+def parse(data: str) -> dict[str, int]:
+    ...
