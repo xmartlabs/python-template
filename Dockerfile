@@ -1,6 +1,6 @@
 # ----
 # Base image install all the tools needed to build the project
-FROM python:3.13-slim-bookworm AS base
+FROM python:3.14-slim-bookworm AS base
 
 ARG PROJECT_NAME=python-template
 ARG USER=appuser
